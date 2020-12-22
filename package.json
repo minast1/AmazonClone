@@ -1,0 +1,20 @@
+{
+  "name": "with-next-auth",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "next",
+    "build": "next build",
+    "start": "next start"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "@material-ui/core": "latest",
+    "@material-ui/icons": "^4.11.2",
+    "next": "latest",
+    "next-auth": "latest",
+    "react": "latest",
+    "react-dom": "latest",
+    "react-hook-form": "^6.13.1",
+    "sqlite3": "^5.0.0"
+  }
+}
