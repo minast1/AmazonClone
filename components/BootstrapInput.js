@@ -6,11 +6,12 @@ const BootstrapInput = withStyles((theme) => ({
     root: props => ({
       'label + & input ': {
         marginTop: theme.spacing(2),
-         borderColor : props.error ?'red' : '#ced4da'
+        borderColor : props.error ?'red' : '#ced4da'
         // color : props.error ? 'red' : ''
       },
      
     }),
+   
     input: {
       borderRadius: 4,
       position: 'relative',
@@ -33,9 +34,9 @@ const BootstrapInput = withStyles((theme) => ({
         '"Segoe UI Emoji"',
         '"Segoe UI Symbol"',
       ].join(','),
-      '&:focus': {
+      '&:focus':  {
         boxShadow: `${fade(theme.palette.primary.main, 0.25)} 0 0 0 0.2rem`,
-        borderColor: theme.palette.primary.main,
+        borderColor:   theme.palette.primary.main,
       },
     },
   }))(InputBase);

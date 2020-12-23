@@ -57,7 +57,8 @@ const useStyles = makeStyles((theme) => ({
         backgroundColor : theme.palette.primary.light
     },
     '& .Mui-error' :  {
-      color : 'red'
+      color : 'red',
+      borderRadius : 'red'
     }
     
   },
@@ -109,7 +110,8 @@ export default function SignIn({triggerSignUp}) {
         <BootstrapInput name="id" 
          inputRef={register({required : 'please enter a valid email or phone number'})}
           fullWidth type="text"
-          error={!!errors.id}/>
+          error={!!errors.id}
+          autoFocus={false}/>
            {errors.id && (
             <span className={classes.error}>{errors.id.message}</span>
           )}
