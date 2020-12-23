@@ -3,16 +3,18 @@ import { FormControl, InputLabel , InputBase, fade, Divider} from '@material-ui/
 
 
 const BootstrapInput = withStyles((theme) => ({
-    root: {
-      'label + &': {
+    root: props => ({
+      'label + & input ': {
         marginTop: theme.spacing(2),
- 
+         borderColor : props.error ?'red' : '#ced4da'
+        // color : props.error ? 'red' : ''
       },
-    },
+     
+    }),
     input: {
       borderRadius: 4,
       position: 'relative',
-      backgroundColor: theme.palette.common.white,
+     backgroundColor: theme.palette.common.white ,
       border: '1px solid #ced4da',
       fontSize: 14,
       //width: 'auto',

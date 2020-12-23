@@ -10,10 +10,11 @@ import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import Image from 'next/image'
 import ArrowRightIcon from '@material-ui/icons/ArrowRight';
-import { FormControl, InputLabel , Divider} from '@material-ui/core';
+import { FormControl, InputLabel , Divider, FormHelperText} from '@material-ui/core';
 import DividerWithText from './DividerWithText';
 import Copyright from '../components/Copyright'
 import {BootstrapInput} from '../components/BootstrapInput'
+import { useForm } from "react-hook-form";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -55,6 +56,9 @@ const useStyles = makeStyles((theme) => ({
     '& .MuiButton-contained' : {
         backgroundColor : theme.palette.primary.light
     },
+    '& .Mui-error' :  {
+      color : 'red'
+    }
     
   },
   submit: {
@@ -68,6 +72,10 @@ const useStyles = makeStyles((theme) => ({
     // border : '1px  solid black'
      display : 'flex',
      flex : 1
+  },
+  error : {
+    color : 'red',
+    fontSize : '11px'
   }
  
 }));
@@ -76,7 +84,10 @@ const useStyles = makeStyles((theme) => ({
 
 export default function SignIn({triggerSignUp}) {
   const classes = useStyles();
-  
+  const {register ,handleSubmit, errors} = useForm() ;
+  const onSubmit = (data) => {
+      console.log(data)
+  }
   return (
       <div>
     <Container component="main" maxWidth="xs"  >
@@ -90,12 +101,18 @@ export default function SignIn({triggerSignUp}) {
         <Typography  variant="h1" style={{marginRight :'auto', fontWeight: 540, fontSize: '30px'}} component="h1">
         Sign-In
         </Typography>
-        <form className={classes.form} noValidate>
-        <FormControl fullWidth margin="dense" size="small">
-        <InputLabel  htmlFor="bootstrap-input" >
+        <form className={classes.form} onSubmit={handleSubmit(onSubmit)} noValidate>
+        <FormControl fullWidth margin="dense" size="small" >
+        <InputLabel shrink={true} error={!!errors.id}>
         Email or mobile phone number
-        </InputLabel>
-        <BootstrapInput defaultValue="amaga@outlook.com"  fullWidth/>
+        </InputLabel >
+        <BootstrapInput name="id" 
+         inputRef={register({required : 'please enter a valid email or phone number'})}
+          fullWidth type="text"
+          error={!!errors.id}/>
+           {errors.id && (
+            <span className={classes.error}>{errors.id.message}</span>
+          )}
       </FormControl>
            <Button
             type="submit"

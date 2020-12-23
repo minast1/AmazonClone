@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
@@ -13,7 +13,7 @@ import ArrowRightIcon from '@material-ui/icons/ArrowRight';
 import { FormControl, InputLabel } from '@material-ui/core';
 import { BootstrapInput } from './BootstrapInput';
 import Copyright from './Copyright';
-
+import { useForm } from "react-hook-form";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -57,6 +57,9 @@ const useStyles = makeStyles((theme) => ({
     },
     '& .MuiFormControl-marginDense' : {
       marginBottom : '8px'
+    },
+    '& .Mui-error' :        {
+      color : 'red'
     }
     
   },
@@ -71,6 +74,10 @@ const useStyles = makeStyles((theme) => ({
     // border : '1px  solid black'
      display : 'flex',
      flex : 1
+  },
+  error : {
+    color : 'red',
+    fontSize : '11px'
   }
  
 }));
@@ -78,7 +85,13 @@ const useStyles = makeStyles((theme) => ({
 
 export default function SignUp({triggerSignIn}) {
   const classes = useStyles();
-
+  const [password, setpassword] = useState("")
+  const {register ,handleSubmit, errors, getValues, reset} = useForm() ;
+ 
+  const onSubmit = (data ,e) => {
+      //console.log(data)
+      e.target.reset()
+  }
   return (
       <div>
     <Container component="main" maxWidth="xs"  >   
@@ -92,30 +105,80 @@ export default function SignUp({triggerSignIn}) {
         <Typography  variant="h1" style={{marginRight :'auto', fontWeight: 400, fontSize: '30px'}} component="h1">
         Create account
         </Typography>
-        <form className={classes.form} noValidate>
+        <form className={classes.form} onSubmit={handleSubmit(onSubmit)} noValidate={true}>
         <FormControl fullWidth margin="dense" size="small">
-        <InputLabel  htmlFor="bootstrap-input" >
+        <InputLabel  htmlFor="bootstrap-input" shrink={true} error={!!errors.name}>
         Your name
         </InputLabel>
-        <BootstrapInput  value={'value'} fullWidth />
+        <BootstrapInput  name="name" error={!!errors.name} fullWidth
+          inputRef={register({required : 'The name field is required'})}/>
+          {errors.name && (
+            <span className={classes.error}>{errors.name.message}</span>
+          )}
       </FormControl>
       <FormControl fullWidth margin="dense" size="small">
-        <InputLabel  htmlFor="bootstrap-input" >
+        <InputLabel  htmlFor="bootstrap-input"  shrink={true}  error={!!errors.name}>
         Email
         </InputLabel>
-        <BootstrapInput defaultValue="amaga@outlook.com"  fullWidth />
+        <BootstrapInput  name="email"  
+        fullWidth 
+        inputRef={register({
+              required: 'email address is required',
+              pattern: {
+                value: /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+                message: 'You must provide a valid email address!',
+              },
+            })}
+            autoComplete='email'
+            error={!!errors.email}
+            />
+             {errors.email && (
+            <span className={classes.error}>{errors.email.message}</span>
+          )}
       </FormControl>
       <FormControl fullWidth margin="dense" size="small">
-        <InputLabel  htmlFor="bootstrap-input" >
+        <InputLabel  htmlFor="bootstrap-input" shrink={true} error={!!errors.password}>
         Password
         </InputLabel>
-        <BootstrapInput defaultValue="amaga@outlook.com"  fullWidth/>
+        <BootstrapInput   name="password" 
+        fullWidth 
+         inputRef={register({
+          required: 'password field is required',
+          minLength : {
+            value : 8 ,
+            message : 'password should be a minimum of 8 characters'
+          }
+        })}
+        onChange= {() => {
+          const value  = getValues("password");
+          setpassword(value)
+          //console.log(password)  
+        }}
+        error={!!errors.password}
+        type="password"
+        />
+         {errors.password && (
+        <span className={classes.error}>{errors.password.message}</span>
+      )}
       </FormControl>
       <FormControl fullWidth margin="dense" size="small">
-        <InputLabel  htmlFor="bootstrap-input" >
+        <InputLabel  htmlFor="bootstrap-input" shrink={true}  error={!!errors.passwordconfirm}>
         Re-enter password
         </InputLabel>
-        <BootstrapInput defaultValue="amaga@outlook.com"  fullWidth />
+        <BootstrapInput   name="passwordconfirm" 
+        fullWidth  
+        type='password'
+        error={!!errors.passwordconfirm}
+        inputRef={
+          register({
+            //required :  'please confirm the password',
+            validate : {
+               required: (value) => value === password || 'password mismatch!'
+            }
+            })}/>
+              {errors.passwordconfirm && (
+        <span className={classes.error}>{errors.passwordconfirm.message}</span>
+      )}
       </FormControl>
            <Button
             type="submit"
