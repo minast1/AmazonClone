@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
@@ -9,11 +9,12 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import Image from 'next/image'
-import ArrowRightIcon from '@material-ui/icons/ArrowRight';
 import { FormControl, InputLabel , Divider, FormHelperText} from '@material-ui/core';
 import DividerWithText from './DividerWithText';
 import Copyright from '../components/Copyright'
 import {BootstrapInput} from '../components/BootstrapInput'
+import NextStep from './NextStep';
+import DefaultStep from './DefaultStep';
 import { useForm } from "react-hook-form";
 
 const useStyles = makeStyles((theme) => ({
@@ -85,8 +86,13 @@ const useStyles = makeStyles((theme) => ({
 
 export default function SignIn({triggerSignUp}) {
   const classes = useStyles();
-  const {register ,handleSubmit, errors} = useForm() ;
+  const {register ,handleSubmit, errors, getValues, trigger} = useForm() ;
+  const [emailChecked, setemailChecked] = useState(false);
+  const [emailvalue, setVal] = useState("")
   const onSubmit = (data) => {
+    if(!data.id) {
+      data.userId = emailvalue ;
+    }
       console.log(data)
   }
   return (
@@ -103,39 +109,27 @@ export default function SignIn({triggerSignUp}) {
         Sign-In
         </Typography>
         <form className={classes.form} onSubmit={handleSubmit(onSubmit)} noValidate>
-        <FormControl fullWidth margin="dense" size="small" >
-        <InputLabel shrink={true} error={!!errors.id}>
-        Email or mobile phone number
-        </InputLabel >
-        <BootstrapInput name="id" 
-         inputRef={register({required : 'please enter a valid email or phone number'})}
-          fullWidth type="text"
-          error={!!errors.id}
-          autoFocus={false}/>
-           {errors.id && (
-            <span className={classes.error}>{errors.id.message}</span>
+          {emailChecked ? (
+               <NextStep
+               errors={errors}
+               register={register}
+               trigger={trigger}
+               getValues={getValues}
+               emailvalue={emailvalue}
+               classes={classes}/>
+          ) :
+           (
+              <DefaultStep 
+              errors={errors}
+              register={register}
+              trigger={trigger}
+              getValues={getValues}
+              setemailChecked={setemailChecked}
+              classes={classes}
+              setVal={setVal}/>
           )}
-      </FormControl>
-           <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            size='small'
-            className={classes.submit}
-          >
-            Continue
-          </Button>
-          <Typography  variant="body2"style={{fontWeight : '500', fontSize:"11.4px", marginTop : '3px'}}>
-          By continuing, you agree to Amazon's Conditions of Use and Privacy Notice.
-          </Typography>
-
-          <Box mt="25px" pl={0}  display="flex" alignItems="center" padding={0} >
-         <ArrowRightIcon />
-         <Link href="#" variant="body2" style={{color: '#1769aa', fontSize : '13px'}}>
-                Need help?
-              </Link>
-              
-         </Box>
+        
+         
         </form>
       </div>
 

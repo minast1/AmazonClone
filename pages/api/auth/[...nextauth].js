@@ -3,35 +3,36 @@ import Providers from 'next-auth/providers'
 
 const options = {
   // @link https://next-auth.js.org/configuration/providers
+  site : process.env.NEXTAUTH_URL ,
   providers: [
-    Providers.Email({
-      // SMTP connection string or nodemailer configuration object https://nodemailer.com/
-      server: process.env.NEXTAUTH_EMAIL_SERVER,
-      // Email services often only allow sending email from a valid/verified address
-      from: process.env.NEXTAUTH_EMAIL_FROM,
-    }),
-    // When configuring oAuth providers make sure you enabling requesting
-    // permission to get the users email address (required to sign in)
-    Providers.Google({
-      clientId: process.env.NEXTAUTH_GOOGLE_ID,
-      clientSecret: process.env.NEXTAUTH_GOOGLE_SECRET,
-    }),
-    Providers.Facebook({
-      clientId: process.env.NEXTAUTH_FACEBOOK_ID,
-      clientSecret: process.env.NEXTAUTH_FACEBOOK_SECRET,
-    }),
-    Providers.Twitter({
-      clientId: process.env.NEXTAUTH_TWITTER_ID,
-      clientSecret: process.env.NEXTAUTH_TWITTER_SECRET,
-    }),
-    Providers.GitHub({
-      clientId: process.env.NEXTAUTH_GITHUB_ID,
-      clientSecret: process.env.NEXTAUTH_GITHUB_SECRET,
-    }),
+
+    Providers.Credentials({
+      // The name to display on the sign in form (e.g. 'Sign in with...')
+      //name: 'Credentials',
+      // The credentials is used to generate a suitable form on the sign in page.
+      // You can specify whatever fields you are expecting to be submitted.
+      // e.g. domain, username, password, 2FA token, etc.
+      authorize: async (credentials) => {
+        
+        // Add logic here to look up the user from the credentials supplied
+        const user = { id: 1, name: 'J Smith', email: 'jsmith@example.com' }
+  
+        if (user) {
+          // Any object returned will be saved in `user` property of the JWT
+          return Promise.resolve(user)
+        } else {
+          // If you return null or false then the credentials will be rejected
+          return Promise.resolve(null)
+          // You can also Reject this callback with an Error or with a URL:
+          // return Promise.reject(new Error('error message')) // Redirect to error page
+          // return Promise.reject('/path/to/redirect')        // Redirect to a URL
+        }
+      }
+    })
   ],
 
   // @link https://next-auth.js.org/configuration/databases
-  database: process.env.NEXTAUTH_DATABASE_URL,
+  //database: process.env.NEXTAUTH_DATABASE_URL,
 
   // @link https://next-auth.js.org/configuration/options#session
   session: {

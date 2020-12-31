@@ -8,13 +8,13 @@
   },
   "license": "MIT",
   "dependencies": {
+    "@hookform/error-message": "^0.0.5",
     "@material-ui/core": "latest",
     "@material-ui/icons": "^4.11.2",
     "next": "latest",
-    "next-auth": "latest",
-    "react": "latest",
-    "react-dom": "latest",
-    "react-hook-form": "^6.13.1",
-    "sqlite3": "^5.0.0"
+    "next-auth": "^3.1.0",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "react-hook-form": "^6.13.1"
   }
 }
