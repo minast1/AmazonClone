@@ -4,16 +4,23 @@ import Popover from '@material-ui/core/Popover';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
-import { Box, ButtonBase, Container, Paper } from '@material-ui/core';
+import { Box, ButtonBase, Container, Link, Paper } from '@material-ui/core';
+import { signOut } from 'next-auth/client';
 
 
 const useStyles = makeStyles((theme) => ({
   typography: {
     padding: theme.spacing(2),
   },
+  link : {
+    color : 'blue',
+    '&:hover' : {
+      cursor : 'pointer'
+    }
+  }
 }));
 
-export default function SimplePopover() {
+export default function SimplePopover({session}) {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
 
@@ -27,12 +34,14 @@ export default function SimplePopover() {
 
   const open = Boolean(anchorEl);
   const id = open ? 'simple-popover' : undefined;
-
+  
+  
+   //console.log(user)
   return (
     <div>
       <ButtonBase aria-describedby={id} variant="contained" color="primary" onClick={handleClick} disableRipple>
         <Box display='flex' flexDirection='column'>
-          <span style={{fontSize : '12px'}}>Hello,Sign in</span>
+          <span style={{fontSize : '12px'}}>Hello,{session ?session.user.name : 'Sign in'}</span>
           <Box style={{fontWeight : 700 , fontSize : '15px'}} display='flex' alignItems='center'>
             Account & Lists
             <ArrowDropDownIcon fontSize='small'/>
@@ -56,8 +65,21 @@ export default function SimplePopover() {
         style={{marginTop : '8px'}}
       >
         <Box  p={2} width="300px" display='flex' flexDirection='column'>
-        <Button variant="contained" color='primary' style={{width : '100%'}}>Sign in</Button>
-        <Box alignSelf="center" style={{color : 'gray'}} pt={1} fontSize="11.5px">New customer? <span style={{color : 'blue'}}>start here</span></Box>
+          {session  ? (
+             <Button variant="contained" color='primary' style={{width : '100%'}} 
+             onClick={(event) => {
+               event.preventDefault() ;
+               signOut({callbackUrl : process.env.NEXT_PUBLIC_URL})
+             }}
+             >Sign out</Button>
+          ) : (
+            <React.Fragment>
+                   <Button variant="contained" color='primary' style={{width : '100%'}} href="/auth/credentials-signin">Sign in</Button>
+        <Box alignSelf="center" style={{color : 'gray'}} pt={1} fontSize="11.5px">New customer? <Link 
+        className={classes.link}>start here</Link></Box>
+            </React.Fragment>
+          )}
+        
         </Box>
       
       </Popover>

@@ -1,5 +1,8 @@
 import NextAuth from 'next-auth'
 import Providers from 'next-auth/providers'
+import prisma from  '../../../src/prisma'
+import Adapters from 'next-auth/adapters'
+import bcrypt from 'bcrypt'
 
 const options = {
   // @link https://next-auth.js.org/configuration/providers
@@ -13,24 +16,43 @@ const options = {
       // You can specify whatever fields you are expecting to be submitted.
       // e.g. domain, username, password, 2FA token, etc.
       authorize: async (credentials) => {
-        
+
+        const {userId , password} = credentials
+    
         // Add logic here to look up the user from the credentials supplied
-        const user = { id: 1, name: 'J Smith', email: 'jsmith@example.com' }
-  
+        const user  =  await prisma.user.findUnique({
+          where : {
+            email : userId
+          },
+          select : {
+
+              id : true ,
+              name : true ,
+              email : true, 
+              picture : true , 
+              password : true
+          }
+        })
+        
+        
         if (user) {
           // Any object returned will be saved in `user` property of the JWT
-          return Promise.resolve(user)
+            const databasePassword = user.password
+            //verify the provided password matches the userpassword
+            return bcrypt.compareSync(password, databasePassword) ?
+             Promise.resolve(user) : Promise.reject(new Error('the password provided is incorrect!'))
         } else {
           // If you return null or false then the credentials will be rejected
-          return Promise.resolve(null)
+         // return Promise.resolve(null)
           // You can also Reject this callback with an Error or with a URL:
-          // return Promise.reject(new Error('error message')) // Redirect to error page
+              
+           return Promise.reject(new Error("the provided email or number doesn't exist")) // Redirect to error page
           // return Promise.reject('/path/to/redirect')        // Redirect to a URL
-        }
+        } 
       }
     })
   ],
-
+  adapter: Adapters.Prisma.Adapter({ prisma }),
   // @link https://next-auth.js.org/configuration/databases
   //database: process.env.NEXTAUTH_DATABASE_URL,
 
@@ -39,26 +61,22 @@ const options = {
     // Use JSON Web Tokens for session instead of database sessions.
     // This option can be used with or without a database for users/accounts.
     // Note: `jwt` is automatically set to `true` if no database is specified.
-    // jwt: true,
+     jwt: true,
     // Seconds - How long until an idle session expires and is no longer valid.
-    // maxAge: 30 * 24 * 60 * 60, // 30 days
+    maxAge: 1 * 3 * 60 * 60, // 3 hrs
     // Seconds - Throttle how frequently to write to database to extend a session.
     // Use it to limit write operations. Set to 0 to always update the database.
     // Note: This option is ignored if using JSON Web Tokens
-    // updateAge: 24 * 60 * 60, // 24 hours
+     updateAge: 24 * 60 * 60, // 24 hours
   },
-
+  debug: process.env.NODE_ENV === "development",
+  secret: process.env.NEXTAUTH_SECRET,
   // @link https://next-auth.js.org/configuration/options#jwt
   jwt: {
     // A secret to use for key generation - you should set this explicitly
     // Defaults to NextAuth.js secret if not explicitly specified.
-    // secret: 'INp8IvdIyeMcoGAgFGoA61DdBglwwSqnXJZkgz8PSnw',
-    // Set to true to use encryption. Defaults to false (signing only).
-    // encryption: true,
-    // You can define your own encode/decode functions for signing and encryption
-    // if you want to override the default behaviour.
-    // encode: async ({ secret, token, maxAge }) => {},
-    // decode: async ({ secret, token, maxAge }) => {},
+     secret: process.env.NEXTAUTH_SECRET,
+  
   },
 
   // @link https://next-auth.js.org/configuration/callbacks
@@ -85,6 +103,8 @@ const options = {
      * @return {object}              Session that will be returned to the client
      */
     session: async (session, user) => {
+      
+      //session = user ;
       //session.customSessionProperty = 'bar'
       return Promise.resolve(session)
     },
@@ -112,7 +132,7 @@ const options = {
   pages: {
     //signIn: '/api/auth/signin',
     //signOut: '/api/auth/signout',
-    //error: '/api/auth/error', // Error code passed in query string as ?error=
+    error: '/auth/credentials-signin', // Error code passed in query string as ?error=
     //verifyRequest: '/api/auth/verify-request', // (used for check email message)
     //newUser: null // If set, new users will be directed here on first sign in
   },

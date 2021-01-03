@@ -11,10 +11,17 @@
     "@hookform/error-message": "^0.0.5",
     "@material-ui/core": "latest",
     "@material-ui/icons": "^4.11.2",
+    "@material-ui/lab": "^4.0.0-alpha.57",
+    "@prisma/client": "2.13.1",
+    "bcrypt": "^5.0.0",
+    "faker": "^5.1.0",
     "next": "latest",
     "next-auth": "^3.1.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-hook-form": "^6.13.1"
+  },
+  "devDependencies": {
+    "@prisma/cli": "^2.13.1"
   }
 }

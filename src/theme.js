@@ -5,7 +5,7 @@ import { red } from '@material-ui/core/colors';
 const theme = createMuiTheme({
   palette: {
     primary: {
-      main: '#FF9900',
+      main: '#ffad33',
       light : '#ffad33'
     },
     secondary: {
@@ -25,11 +25,7 @@ const theme = createMuiTheme({
     fontFamily : "Amazon Ember, Ariel, sans-serif"
   },
   overrides : {
-     MuiButton : {
-       contained : {
-         backgroundColor : '#ffad33'
-       }
-     }
+    
   }
   
 });

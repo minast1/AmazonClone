@@ -1,21 +1,21 @@
 import React, { useState } from 'react';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import TextField from '@material-ui/core/TextField';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Link from '@material-ui/core/Link';
 import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import Image from 'next/image'
-import { FormControl, InputLabel , Divider, FormHelperText} from '@material-ui/core';
 import DividerWithText from './DividerWithText';
 import Copyright from '../components/Copyright'
-import {BootstrapInput} from '../components/BootstrapInput'
 import NextStep from './NextStep';
 import DefaultStep from './DefaultStep';
 import { useForm } from "react-hook-form";
+import { signIn } from 'next-auth/client';
+import Alert from '@material-ui/lab/Alert';
+
+
+
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -93,16 +93,18 @@ export default function SignIn({triggerSignUp}) {
     if(!data.id) {
       data.userId = emailvalue ;
     }
-      console.log(data)
+    data.callbackUrl = `${process.env.NEXT_PUBLIC_URL}`
+     // console.log(data)
+     signIn('credentials' , data )
   }
   return (
       <div>
     <Container component="main" maxWidth="xs"  >
       <CssBaseline />
-      <Box display="flex" justifyContent="center">
+      <Box display="flex" justifyContent="center" pr={4}>
       <Image src='/amazon-2.svg' width="120px" height="80px"/>
       </Box>
-      
+      <Alert severity="error" style={{marginRight : '40px', marginBottom : '5px'}}>This is an error alert — check it out!</Alert>
       <div className={classes.paper}>
   
         <Typography  variant="h1" style={{marginRight :'auto', fontWeight: 540, fontSize: '30px'}} component="h1">
