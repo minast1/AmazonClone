@@ -84,27 +84,33 @@ const useStyles = makeStyles((theme) => ({
 
 
 
-export default function SignIn({triggerSignUp}) {
+export default function SignIn({triggerSignUp, errorMessage}) {
   const classes = useStyles();
-  const {register ,handleSubmit, errors, getValues, trigger} = useForm() ;
+  const {register ,handleSubmit, errors, getValues, trigger, reset} = useForm() ;
   const [emailChecked, setemailChecked] = useState(false);
   const [emailvalue, setVal] = useState("")
-  const onSubmit = (data) => {
-    if(!data.id) {
+  const onSubmit = (data, e) => {
+    //console.log(data)
+    if(data.id  === undefined) {
       data.userId = emailvalue ;
     }
     data.callbackUrl = `${process.env.NEXT_PUBLIC_URL}`
      // console.log(data)
-     signIn('credentials' , data )
+     signIn('credentials' , data );
+      e.target.reset();
+    // console.log(data)
+
   }
   return (
       <div>
     <Container component="main" maxWidth="xs"  >
       <CssBaseline />
-      <Box display="flex" justifyContent="center" pr={4}>
-      <Image src='/amazon-2.svg' width="120px" height="80px"/>
+      <Box display="flex" justifyContent="center" pr={4} pt={2} pb={2}>
+      <Image src="/black.png" width="130px" height="35px"/>
       </Box>
-      <Alert severity="error" style={{marginRight : '40px', marginBottom : '5px'}}>This is an error alert — check it out!</Alert>
+      {errorMessage && (
+       <Alert severity="error" style={{marginRight : '40px', marginBottom : '5px'}}>{errorMessage}</Alert>
+      )}
       <div className={classes.paper}>
   
         <Typography  variant="h1" style={{marginRight :'auto', fontWeight: 540, fontSize: '30px'}} component="h1">

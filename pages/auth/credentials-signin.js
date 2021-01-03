@@ -20,11 +20,11 @@ const Credentials = () => {
   const classes = useStyles()
   const router = useRouter()
   const {error} = router.query
-  console.log(error?.toString())
+  //console.log(error)
   return (
   
-  <Container maxWidth="xl" className={classes.root} >
-      {signIn ? <SignIn triggerSignUp={setsignIn}/> : <SignUp triggerSignIn={setsignIn}/>}
+  <Container maxWidth="xl" className={classes.root}>
+      {signIn ? <SignIn triggerSignUp={setsignIn} errorMessage={error}/> : <SignUp triggerSignIn={setsignIn}/>}
 </Container>
 )}  
 

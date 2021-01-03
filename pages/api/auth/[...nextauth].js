@@ -4,53 +4,64 @@ import prisma from  '../../../src/prisma'
 import Adapters from 'next-auth/adapters'
 import bcrypt from 'bcrypt'
 
+
+
+ const getUser  =  async (id) => {
+     const user  =  await prisma.user.findUnique({
+        where : {
+              email:  id
+            },
+            select : {
+              id : true ,
+              name : true , 
+              email :  true ,
+              picture : true, 
+              password : true
+            }
+      })
+     return user 
+ } 
+
+ 
+ const verifyUser = async (password , databasePassword) => {
+  const match = await bcrypt.compare(password, databasePassword); 
+  return match
+ }
+
+
+
 const options = {
   // @link https://next-auth.js.org/configuration/providers
   site : process.env.NEXTAUTH_URL ,
   providers: [
 
     Providers.Credentials({
-      // The name to display on the sign in form (e.g. 'Sign in with...')
-      //name: 'Credentials',
-      // The credentials is used to generate a suitable form on the sign in page.
-      // You can specify whatever fields you are expecting to be submitted.
-      // e.g. domain, username, password, 2FA token, etc.
-      authorize: async (credentials) => {
-
-        const {userId , password} = credentials
     
-        // Add logic here to look up the user from the credentials supplied
-        const user  =  await prisma.user.findUnique({
-          where : {
-            email : userId
-          },
-          select : {
+      authorize: async (credentials) => {
+         
+          const {userId , id,  password} = credentials
+          const userEmail =  id ??  userId;
+      
+          // Add logic here to look up the user from the credentials supplied
+           const user = await getUser(userEmail);
+  
+          if (user) {
+            
+            const crosscheckPassword = await verifyUser(password , user.password)
+              return crosscheckPassword ? Promise.resolve(user) : Promise.resolve(null)
+           
+          } else {
 
-              id : true ,
-              name : true ,
-              email : true, 
-              picture : true , 
-              password : true
+            return Promise.reject(new Error('Invalid Username and Password combination!')) 
           }
-        })
-        
-        
-        if (user) {
-          // Any object returned will be saved in `user` property of the JWT
-            const databasePassword = user.password
-            //verify the provided password matches the userpassword
-            return bcrypt.compareSync(password, databasePassword) ?
-             Promise.resolve(user) : Promise.reject(new Error('the password provided is incorrect!'))
-        } else {
-          // If you return null or false then the credentials will be rejected
+  
+          }
+         
          // return Promise.resolve(null)
           // You can also Reject this callback with an Error or with a URL:
-              
-           return Promise.reject(new Error("the provided email or number doesn't exist")) // Redirect to error page
-          // return Promise.reject('/path/to/redirect')        // Redirect to a URL
-        } 
-      }
-    })
+           // return Promise.reject(new Error('error message')) // Redirect to error page
+      
+      })
   ],
   adapter: Adapters.Prisma.Adapter({ prisma }),
   // @link https://next-auth.js.org/configuration/databases
@@ -69,7 +80,7 @@ const options = {
     // Note: This option is ignored if using JSON Web Tokens
      updateAge: 24 * 60 * 60, // 24 hours
   },
-  debug: process.env.NODE_ENV === "development",
+  debug: true,
   secret: process.env.NEXTAUTH_SECRET,
   // @link https://next-auth.js.org/configuration/options#jwt
   jwt: {

@@ -33,8 +33,9 @@ CREATE TABLE "users" (
 "id" SERIAL,
     "name" TEXT,
     "email" TEXT,
+    "password" TEXT NOT NULL,
     "email_verified" TIMESTAMP(3),
-    "image" TEXT,
+    "picture" TEXT,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
@@ -73,6 +74,9 @@ CREATE UNIQUE INDEX "sessions.access_token_unique" ON "sessions"("access_token")
 
 -- CreateIndex
 CREATE UNIQUE INDEX "users.email_unique" ON "users"("email");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "users.password_unique" ON "users"("password");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "verification_requests.token_unique" ON "verification_requests"("token");
