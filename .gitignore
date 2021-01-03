@@ -26,7 +26,7 @@ yarn-debug.log*
 yarn-error.log*
 
 #prisma
-/prisma/.env
+prisma/.env
 
 
 # local env files
