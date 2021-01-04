@@ -97,7 +97,7 @@ export default function SignIn({triggerSignUp, errorMessage}) {
     data.callbackUrl = `${process.env.NEXT_PUBLIC_URL}`
      // console.log(data)
      signIn('credentials' , data );
-      e.target.reset();
+     // e.target.reset();
     // console.log(data)
 
   }
@@ -116,7 +116,7 @@ export default function SignIn({triggerSignUp, errorMessage}) {
         <Typography  variant="h1" style={{marginRight :'auto', fontWeight: 540, fontSize: '30px'}} component="h1">
         Sign-In
         </Typography>
-        <form className={classes.form} onSubmit={handleSubmit(onSubmit)} noValidate>
+        <form className={classes.form}method='post'  action='/api/auth/callback/credentials' onSubmit={handleSubmit(onSubmit)} noValidate>
           {emailChecked ? (
                <NextStep
                errors={errors}

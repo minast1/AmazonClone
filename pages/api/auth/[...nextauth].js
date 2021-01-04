@@ -3,6 +3,7 @@ import Providers from 'next-auth/providers'
 import prisma from  '../../../src/prisma'
 import Adapters from 'next-auth/adapters'
 import bcrypt from 'bcrypt'
+import { PanoramaFishEye } from '@material-ui/icons'
 
 
 
@@ -22,23 +23,17 @@ import bcrypt from 'bcrypt'
      return user 
  } 
 
- 
- const verifyUser = async (password , databasePassword) => {
-  const match = await bcrypt.compare(password, databasePassword); 
-  return match
- }
-
-
 
 const options = {
   // @link https://next-auth.js.org/configuration/providers
   site : process.env.NEXTAUTH_URL ,
+  secret: process.env.NEXTAUTH_SECRET,
   providers: [
 
     Providers.Credentials({
     
       authorize: async (credentials) => {
-         
+             // console.log(credentials)
           const {userId , id,  password} = credentials
           const userEmail =  id ??  userId;
       
@@ -46,13 +41,20 @@ const options = {
            const user = await getUser(userEmail);
   
           if (user) {
-            
-            const crosscheckPassword = await verifyUser(password , user.password)
-              return crosscheckPassword ? Promise.resolve(user) : Promise.resolve(null)
+             console.log(process.env.NEXTAUTH_SECRET)
+           // bcrypt.compare(password, user.password, (err ,result) => {
+              //  return  result  ? Promise.resolve(user) : Promise.reject(err)
+            //}); 
+           
+          const crosscheckPassword = bcrypt.compareSync(password, user.password)
+            if(crosscheckPassword) {
+            return Promise.resolve(user)
+           }  else { 
+             return  Promise.reject("/auth/credentials-signin?error=Invalid Password")}
            
           } else {
 
-            return Promise.reject(new Error('Invalid Username and Password combination!')) 
+              return Promise.reject("/auth/credentials-signin?error=Invalid Username and Password combination!")
           }
   
           }
@@ -81,7 +83,7 @@ const options = {
      updateAge: 24 * 60 * 60, // 24 hours
   },
   debug: true,
-  secret: process.env.NEXTAUTH_SECRET,
+ 
   // @link https://next-auth.js.org/configuration/options#jwt
   jwt: {
     // A secret to use for key generation - you should set this explicitly
@@ -143,7 +145,7 @@ const options = {
   pages: {
     //signIn: '/api/auth/signin',
     //signOut: '/api/auth/signout',
-    error: '/auth/credentials-signin', // Error code passed in query string as ?error=
+   // error: '/auth/credentials-signin', // Error code passed in query string as ?error=
     //verifyRequest: '/api/auth/verify-request', // (used for check email message)
     //newUser: null // If set, new users will be directed here on first sign in
   },
