@@ -14,7 +14,7 @@ const useStyles = makeStyles(theme => ({
  
 }))
 
-const NextAuth = ({session}) => {
+const Home = ({session}) => {
   const classes = useStyles();
   
   return (
@@ -43,4 +43,4 @@ export async function getServerSideProps({req}) {
         }
       }
 }
- export default NextAuth
+ export default Home

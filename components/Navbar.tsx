@@ -5,8 +5,8 @@ import { AppBar, ButtonBase, InputBase,  Paper, Toolbar } from '@material-ui/cor
 import Image from 'next/image';
 import LocationOnOutlinedIcon from '@material-ui/icons/LocationOnOutlined';
 import SearchIcon from '@material-ui/icons/Search';
-import SimplePopover from '../components/SimplePopover';
-import CategoryDropdown from '../components/CategoryDropdown';
+import SimplePopover from './SimplePopover';
+import CategoryDropdown from './CategoryDropdown';
 import ShoppingCartOutlinedIcon from '@material-ui/icons/ShoppingCartOutlined';
 
 

@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import Container from '@material-ui/core/Container';
-import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import { makeStyles } from '@material-ui/core/styles';
 import SignIn from '../../components/SignIn';
 import SignUp from '../../components/SignUp';
 import { useRouter } from 'next/router'
+import { authStore } from '../../src/authStore';
+//import { FormProvider,useForm } from "react-hook-form";
 
 
 const useStyles = makeStyles(theme => ({
@@ -16,15 +17,25 @@ const useStyles = makeStyles(theme => ({
 }))
 
 const Credentials = () => {
-  const [signIn, setsignIn] = useState(true)
+  const authView = authStore(state => state.authView);
+ 
   const classes = useStyles()
   const router = useRouter()
-  const {error} = router.query
-  //console.log(error)
+  const { error } = router.query
+  
+  React.useEffect(() => {
+    error && authStore.setState({ error: error })
+   
+  }, []);
+
   return (
   
   <Container maxWidth="xl" className={classes.root}>
-      {signIn ? <SignIn triggerSignUp={setsignIn} errorMessage={error}/> : <SignUp triggerSignIn={setsignIn}/>}
+      {
+        authView === 'sign_in' ?
+          <SignIn />
+          : <SignUp />
+      }
 </Container>
 )}  
 

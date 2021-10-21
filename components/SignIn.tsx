@@ -7,12 +7,13 @@ import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import Image from 'next/image'
 import DividerWithText from './DividerWithText';
-import Copyright from '../components/Copyright'
+import Copyright from './Copyright'
 import NextStep from './NextStep';
 import DefaultStep from './DefaultStep';
-import { useForm } from "react-hook-form";
+import { FormProvider,SubmitHandler,useForm } from "react-hook-form";
 import { signIn } from 'next-auth/client';
 import Alert from '@material-ui/lab/Alert';
+import { authStore } from '../src/authStore';
 
 
 
@@ -34,8 +35,6 @@ const useStyles = makeStyles((theme) => ({
     width : '90%',
     display: 'flex',
     border : '1px solid darkgray',
-    display : 'flex',
-    //borderRadius :'4px',
     flexDirection: 'column',
     alignItems: 'center',
   },
@@ -83,20 +82,26 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
+type IFormInput = {
+  id: string | number
+  password: string | number
+}
 
-export default function SignIn({triggerSignUp, errorMessage}) {
+export default function SignIn() {
   const classes = useStyles();
-  const {register ,handleSubmit, errors, getValues, trigger, reset} = useForm() ;
-  const [emailChecked, setemailChecked] = useState(false);
-  const [emailvalue, setVal] = useState("")
-  const onSubmit = (data, e) => {
-    //console.log(data)
-    if(data.id  === undefined) {
-      data.userId = emailvalue ;
-    }
-    data.callbackUrl = `${process.env.NEXT_PUBLIC_URL}`
+  const methods = useForm<IFormInput>();
+  const error = authStore(state => state.error);
+  const emailChecked = authStore(state => state.emailChecked);
+  const setAuthView = authStore(state => state.setAuthView)
+
+  const onSubmit: SubmitHandler<IFormInput> = (data) => {
+      console.log(data)
+    //if(data.id  === undefined) {
+     // data.userId = emailvalue ;
+   // }
+   // data.callbackUrl = `${process.env.NEXT_PUBLIC_URL}`
      // console.log(data)
-     signIn('credentials' , data );
+    // signIn('credentials' , data );
      // e.target.reset();
     // console.log(data)
 
@@ -108,37 +113,31 @@ export default function SignIn({triggerSignUp, errorMessage}) {
       <Box display="flex" justifyContent="center" pr={4} pt={2} pb={2}>
       <Image src="/black.png" width="130px" height="35px"/>
       </Box>
-      {errorMessage && (
-       <Alert severity="error" style={{marginRight : '40px', marginBottom : '5px'}}>{errorMessage}</Alert>
+      {error && (
+       <Alert severity="error" style={{marginRight : '40px', marginBottom : '5px'}}>{error}</Alert>
       )}
       <div className={classes.paper}>
   
         <Typography  variant="h1" style={{marginRight :'auto', fontWeight: 540, fontSize: '30px'}} component="h1">
         Sign-In
-        </Typography>
-        <form className={classes.form}method='post'  action='/api/auth/callback/credentials' onSubmit={handleSubmit(onSubmit)} noValidate>
+          </Typography>
+          <FormProvider {...methods} > 
+            <form
+              className={classes.form}
+              method='post'
+              action='/api/auth/callback/credentials'
+              onSubmit={methods.handleSubmit(onSubmit)} 
+              noValidate>
           {emailChecked ? (
-               <NextStep
-               errors={errors}
-               register={register}
-               trigger={trigger}
-               getValues={getValues}
-               emailvalue={emailvalue}
-               classes={classes}/>
+               <NextStep/>
           ) :
            (
-              <DefaultStep 
-              errors={errors}
-              register={register}
-              trigger={trigger}
-              getValues={getValues}
-              setemailChecked={setemailChecked}
-              classes={classes}
-              setVal={setVal}/>
+              <DefaultStep />
           )}
         
          
         </form>
+        </FormProvider>
       </div>
 
       <Box  width="90%" mt={2}>
@@ -148,7 +147,7 @@ export default function SignIn({triggerSignUp, errorMessage}) {
       <Box className={classes.signup}>
          
           <Button color="inherit" variant='contained' disableElevation={true} 
-          fullWidth size='small' onClick={ () => triggerSignUp(false) /* sets the main signIn to false*/}> 
+          fullWidth size='small' onClick={ () => setAuthView /* sets the main signIn to false*/}> 
               Create your Amazon account
           </Button>
       </Box>

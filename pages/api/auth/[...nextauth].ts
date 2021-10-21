@@ -1,13 +1,17 @@
-import NextAuth from 'next-auth'
-import Providers from 'next-auth/providers'
+import NextAuth, { User } from 'next-auth'
 import prisma from  '../../../src/prisma'
-import Adapters from 'next-auth/adapters'
 import bcrypt from 'bcrypt'
-import { PanoramaFishEye } from '@material-ui/icons'
+import { PrismaAdapter } from "@next-auth/prisma-adapter"
+import Providers from "next-auth/providers"
+//import Credentials from '../../auth/credentials-signin';
 
+type UserCredentials = {
+  userId?: string | undefined
+  id?: number | undefined 
+  password: string
+}
 
-
- const getUser  =  async (id) => {
+ const getUser  =  async (id: string) => {
      const user  =  await prisma.user.findUnique({
         where : {
               email:  id
@@ -24,29 +28,29 @@ import { PanoramaFishEye } from '@material-ui/icons'
  } 
 
 
-const options = {
+export default NextAuth ({
   // @link https://next-auth.js.org/configuration/providers
   site : process.env.NEXTAUTH_URL ,
   secret: process.env.NEXTAUTH_SECRET,
   providers: [
 
     Providers.Credentials({
-    
-      authorize: async (credentials) => {
-             // console.log(credentials)
-          const {userId , id,  password} = credentials
-          const userEmail =  id ??  userId;
+      
+      async authorize(credentials, req)  {
+          console.log(credentials)
+        //  const {userId ,  password} = credentials
+          //const userEmail =  credentials.userId ??  userId;
       
           // Add logic here to look up the user from the credentials supplied
-           const user = await getUser(userEmail);
+           const user = await getUser(credentials.userId);
   
           if (user) {
-             console.log(process.env.NEXTAUTH_SECRET)
+            // console.log(process.env.NEXTAUTH_SECRET)
            // bcrypt.compare(password, user.password, (err ,result) => {
               //  return  result  ? Promise.resolve(user) : Promise.reject(err)
             //}); 
            
-          const crosscheckPassword = bcrypt.compareSync(password, user.password)
+          const crosscheckPassword = bcrypt.compareSync(credentials.password, user.password)
             if(crosscheckPassword) {
             return Promise.resolve(user)
            }  else { 
@@ -65,7 +69,7 @@ const options = {
       
       })
   ],
-  adapter: Adapters.Prisma.Adapter({ prisma }),
+  adapter: PrismaAdapter(prisma),
   // @link https://next-auth.js.org/configuration/databases
   //database: process.env.NEXTAUTH_DATABASE_URL,
 
@@ -143,7 +147,7 @@ const options = {
   // The routes shown here are the default URLs that will be used.
   // @link https://next-auth.js.org/configuration/pages
   pages: {
-    //signIn: '/api/auth/signin',
+    signIn: '/auth/credentials-signin',
     //signOut: '/api/auth/signout',
    // error: '/auth/credentials-signin', // Error code passed in query string as ?error=
     //verifyRequest: '/api/auth/verify-request', // (used for check email message)
@@ -153,8 +157,8 @@ const options = {
   // Additional options
   // secret: 'abcdef123456789' // Recommended (but auto-generated if not specified)
   // debug: true, // Use this option to enable debug messages in the console
-}
+})
 
-const Auth = (req, res) => NextAuth(req, res, options)
+//const Auth = (req, res) => NextAuth(req, res, options)
 
-export default Auth
+//export default Auth

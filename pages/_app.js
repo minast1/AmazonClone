@@ -5,8 +5,8 @@ import { ThemeProvider } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import theme from '../src/theme';
 
-const App = ({ Component, pageProps }) => {
-  const { session } = pageProps
+const App = ({ Component, pageProps : {session, ...pageProps} }) => {
+  //const { session } = pageProps
 
   React.useEffect(() => {
     // Remove the server-side injected CSS.

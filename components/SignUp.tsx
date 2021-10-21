@@ -83,7 +83,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-export default function SignUp({triggerSignIn}) {
+export default function SignUp() {
   const classes = useStyles();
   const [password, setpassword] = useState("")
   const {register ,handleSubmit, errors, getValues, reset} = useForm() ;
