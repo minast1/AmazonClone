@@ -7,14 +7,15 @@ import Navbar from '../components/Navbar';
 import { useSession, getSession } from 'next-auth/client'
 
 const useStyles = makeStyles(theme => ({
-  
+    root: {},
   paper: {
     marginRight: theme.spacing(2),
   },
  
 }))
 
-const Home = ({session}) => {
+const Home = () => {
+  const [session, loading] = useSession();
   const classes = useStyles();
   
   return (
@@ -33,7 +34,7 @@ const Home = ({session}) => {
     </div>
 )}  
 
-export async function getServerSideProps({req}) {
+/*export async function getServerSideProps({req}) {
 
       const session  =  await getSession({req}) ;
     
@@ -42,5 +43,5 @@ export async function getServerSideProps({req}) {
           session
         }
       }
-}
+}*/
  export default Home

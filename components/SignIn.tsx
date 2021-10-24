@@ -14,8 +14,7 @@ import { FormProvider,SubmitHandler,useForm } from "react-hook-form";
 import { signIn } from 'next-auth/client';
 import Alert from '@material-ui/lab/Alert';
 import { authStore } from '../src/authStore';
-
-
+import { IFormInput } from '../src/constants';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -82,10 +81,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-type IFormInput = {
-  id: string | number
-  password: string | number
-}
+
 
 export default function SignIn() {
   const classes = useStyles();
@@ -95,14 +91,13 @@ export default function SignIn() {
   const setAuthView = authStore(state => state.setAuthView)
 
   const onSubmit: SubmitHandler<IFormInput> = (data) => {
-      console.log(data)
-    //if(data.id  === undefined) {
-     // data.userId = emailvalue ;
-   // }
-   // data.callbackUrl = `${process.env.NEXT_PUBLIC_URL}`
-     // console.log(data)
-    // signIn('credentials' , data );
-     // e.target.reset();
+     
+    data.callbackUrl = `${process.env.NEXT_PUBLIC_URL}`
+       // console.log(data)
+     signIn('credentials' , data );
+    methods.reset();
+    authStore.setState({ userId: '', password: '' });
+
     // console.log(data)
 
   }

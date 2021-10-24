@@ -5,13 +5,8 @@ import { PrismaAdapter } from "@next-auth/prisma-adapter"
 import Providers from "next-auth/providers"
 //import Credentials from '../../auth/credentials-signin';
 
-type UserCredentials = {
-  userId?: string | undefined
-  id?: number | undefined 
-  password: string
-}
 
- const getUser  =  async (id: string) => {
+ const getUserByEmail  =  async (id: string) => {
      const user  =  await prisma.user.findUnique({
         where : {
               email:  id
@@ -25,24 +20,53 @@ type UserCredentials = {
             }
       })
      return user 
+}
+ 
+const getUserNumber  =  async (id: number) => {
+     const user  =  await prisma.user.findUnique({
+        where : {
+              phone:  id.toString() // Perform the migrations first
+            },
+            select : {
+              id : true ,
+              name : true , 
+              email :  true ,
+              picture : true, 
+              password : true
+            }
+      })
+     return user 
  } 
+  
+  interface IFormInput {
+  id: string | number
+  password: string | number
+  callbackUrl : string
+}
 
+type Creds = "userId" | "password"
 
 export default NextAuth ({
   // @link https://next-auth.js.org/configuration/providers
-  site : process.env.NEXTAUTH_URL ,
+  //site : process.env.NEXTAUTH_URL ,
   secret: process.env.NEXTAUTH_SECRET,
   providers: [
 
     Providers.Credentials({
-      
-      async authorize(credentials, req)  {
-          console.log(credentials)
-        //  const {userId ,  password} = credentials
+
+       
+      credentials: {
+        id: { type: 'text'},
+        password: {  type: 'password'} 
+     },
+      async authorize(credentials, req)  {  
+         // console.log(credentials)
+         // const {id ,  password} = credentials
           //const userEmail =  credentials.userId ??  userId;
-      
           // Add logic here to look up the user from the credentials supplied
-           const user = await getUser(credentials.userId);
+        const user = (typeof credentials.id === 'string') ? await getUserByEmail(credentials.id) :
+             await getUserNumber(credentials.id)
+         
   
           if (user) {
             // console.log(process.env.NEXTAUTH_SECRET)

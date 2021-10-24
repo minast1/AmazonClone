@@ -8,6 +8,7 @@ import SearchIcon from '@material-ui/icons/Search';
 import SimplePopover from './SimplePopover';
 import CategoryDropdown from './CategoryDropdown';
 import ShoppingCartOutlinedIcon from '@material-ui/icons/ShoppingCartOutlined';
+import { Session } from 'next-auth';
 
 
 
@@ -82,7 +83,10 @@ const useStyles = makeStyles(theme => ({
  
 }))
 
-const Navbar = ({session}) => {
+type AppProps = {
+  session: Session | null
+}
+const Navbar = ({session}: AppProps) => {
   const classes = useStyles();
  
   return (
@@ -92,7 +96,7 @@ const Navbar = ({session}) => {
         <AppBar position="fixed" elevation={0} className={classes.appBarRoot} > 
         <Toolbar className={classes.toolbar}>
           <ButtonBase edge="start" className={classes.menuButton} color="inherit" aria-label="menu" disableRipple={true}>
-            <Image src='/amazon_white.png' width="95px" height="29px" sytle={{objectFit : 'contain'}}/>
+            <Image src='/amazon_white.png' width="95px" height="29px" style={{objectFit : 'contain'}}/>
           </ButtonBase> 
             
 
