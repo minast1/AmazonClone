@@ -7,7 +7,7 @@ import Providers from "next-auth/providers"
 
 
  const getUserByEmail  =  async (id: string) => {
-     const user  =  await prisma.user.findUnique({
+     const user  =  await prisma.user.find({
         where : {
               email:  id
             },
@@ -38,13 +38,8 @@ const getUserNumber  =  async (id: number) => {
      return user 
  } 
   
-  interface IFormInput {
-  id: string | number
-  password: string | number
-  callbackUrl : string
-}
+ 
 
-type Creds = "userId" | "password"
 
 export default NextAuth ({
   // @link https://next-auth.js.org/configuration/providers
