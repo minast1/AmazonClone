@@ -26,8 +26,8 @@ const Credentials = () => {
   React.useEffect(() => {
     error && authStore.setState({ error: error })
    
-  }, []);
-
+  }, [router.query]);
+  
   return (
   
   <Container maxWidth="xl" className={classes.root}>

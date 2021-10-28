@@ -6,6 +6,7 @@ import Button from '@material-ui/core/Button';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import { Box, ButtonBase, Container, Link, Paper } from '@material-ui/core';
 import { signOut } from 'next-auth/client';
+import { Session } from 'next-auth';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -20,11 +21,15 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-export default function SimplePopover({session}) {
-  const classes = useStyles();
-  const [anchorEl, setAnchorEl] = React.useState(null);
+type AppProps = {
+  session: Session
+}
 
-  const handleClick = (event) => {
+export default function SimplePopover({session}: AppProps) {
+  const classes = useStyles();
+  const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
+
+  const handleClick = (event:React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
   };
 
@@ -39,9 +44,9 @@ export default function SimplePopover({session}) {
    //console.log(user)
   return (
     <div>
-      <ButtonBase aria-describedby={id} variant="contained" color="primary" onClick={handleClick} disableRipple>
+      <ButtonBase aria-describedby={id}  color="primary" onClick={handleClick} disableRipple>
         <Box display='flex' flexDirection='column'>
-          <span style={{fontSize : '12px'}}>Hello,{session ?session.user.name : 'Sign in'}</span>
+          <span style={{fontSize : '12px'}}>Hello , {session ? session.user?.name : 'Sign in'}</span>
           <Box style={{fontWeight : 700 , fontSize : '15px'}} display='flex' alignItems='center'>
             Account & Lists
             <ArrowDropDownIcon fontSize='small'/>

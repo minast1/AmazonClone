@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import TextField from '@material-ui/core/TextField';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Link from '@material-ui/core/Link';
 import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
@@ -10,10 +8,17 @@ import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import Image from 'next/image'
 import ArrowRightIcon from '@material-ui/icons/ArrowRight';
-import { FormControl, InputLabel } from '@material-ui/core';
-import { BootstrapInput } from './BootstrapInput';
 import Copyright from './Copyright';
-import { useForm } from "react-hook-form";
+import { useForm , SubmitHandler} from "react-hook-form";
+import { authStore } from '../src/authStore';
+import { yupResolver } from '@hookform/resolvers/yup';
+import FormInputText from './FormInputText';
+import { RegisterFormInput, schema } from '../src/constants';
+import { ResponseData } from '../pages/api/auth/signUp';
+import { signIn } from 'next-auth/client';
+import Alert from '@material-ui/lab/Alert';
+
+
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -32,7 +37,6 @@ const useStyles = makeStyles((theme) => ({
     width : '90%',
     display: 'flex',
     border : '1px solid darkgray',
-    display : 'flex',
     //borderRadius :'4px',
     flexDirection: 'column',
     alignItems: 'center',
@@ -83,103 +87,61 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
+
+
+
 export default function SignUp() {
   const classes = useStyles();
-  const [password, setpassword] = useState("")
-  const {register ,handleSubmit, errors, getValues, reset} = useForm() ;
- 
-  const onSubmit = (data ,e) => {
-      //console.log(data)
-      e.target.reset()
+  const { register, control, handleSubmit, formState: { errors }, getValues, reset } = useForm<RegisterFormInput>({
+    resolver: yupResolver(schema)
+  }) ;
+  const setAuthView = authStore(state => state.setAuthView);
+   const error = authStore(state => state.error);
+  
+
+  const onSubmit: SubmitHandler<RegisterFormInput> = async (data, e) => {
+
+    const response = await fetch(`/api/auth/signUp`, {
+      method: 'POST',
+      body: JSON.stringify({ ...data }),
+      headers: {
+        'Content-Type': 'application/json',
+      }
+    });
+
+    const newUser: ResponseData = await response.json();
+    if (!response.ok) {
+        authStore.setState({error: newUser.message})
+    }
+
+    // If the response has a status of 200, sign the new user in 
+     signIn('credentials' , {id: data.email, password: data.password}  );
+       reset();
   }
+  
   return (
       <div>
     <Container component="main" maxWidth="xs"  >   
       <CssBaseline />
       <Box display="flex" justifyContent="center">
-      <Image src='/amazon-2.svg' width="120px" height="80px"/>
+      <Image src="/black.png" width="130px" height="35px"/>
       </Box>
-      
+        {error && (
+       <Alert severity="error" style={{marginRight : '40px', marginBottom : '5px'}}>{error}</Alert>
+      )} 
       <div className={classes.paper}>
   
         <Typography  variant="h1" style={{marginRight :'auto', fontWeight: 400, fontSize: '30px'}} component="h1">
         Create account
         </Typography>
-        <form className={classes.form} onSubmit={handleSubmit(onSubmit)} noValidate={true}>
-        <FormControl fullWidth margin="dense" size="small">
-        <InputLabel  htmlFor="bootstrap-input" shrink={true} error={!!errors.name}>
-        Your name
-        </InputLabel>
-        <BootstrapInput  name="name" error={!!errors.name} fullWidth
-          inputRef={register({required : 'The name field is required'})}/>
-          {errors.name && (
-            <span className={classes.error}>{errors.name.message}</span>
-          )}
-      </FormControl>
-      <FormControl fullWidth margin="dense" size="small">
-        <InputLabel  htmlFor="bootstrap-input"  shrink={true}  error={!!errors.name}>
-        Email
-        </InputLabel>
-        <BootstrapInput  name="email"  
-        fullWidth 
-        inputRef={register({
-              required: 'email address is required',
-              pattern: {
-                value: /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-                message: 'You must provide a valid email address!',
-              },
-            })}
-            autoComplete='email'
-            error={!!errors.email}
-            />
-             {errors.email && (
-            <span className={classes.error}>{errors.email.message}</span>
-          )}
-      </FormControl>
-      <FormControl fullWidth margin="dense" size="small">
-        <InputLabel  htmlFor="bootstrap-input" shrink={true} error={!!errors.password}>
-        Password
-        </InputLabel>
-        <BootstrapInput   name="password" 
-        fullWidth 
-         inputRef={register({
-          required: 'password field is required',
-          minLength : {
-            value : 8 ,
-            message : 'password should be a minimum of 8 characters'
-          }
-        })}
-        onChange= {() => {
-          const value  = getValues("password");
-          setpassword(value)
-          //console.log(password)  
-        }}
-        error={!!errors.password}
-        type="password"
-        />
-         {errors.password && (
-        <span className={classes.error}>{errors.password.message}</span>
-      )}
-      </FormControl>
-      <FormControl fullWidth margin="dense" size="small">
-        <InputLabel  htmlFor="bootstrap-input" shrink={true}  error={!!errors.passwordconfirm}>
-        Re-enter password
-        </InputLabel>
-        <BootstrapInput   name="passwordconfirm" 
-        fullWidth  
-        type='password'
-        error={!!errors.passwordconfirm}
-        inputRef={
-          register({
-            //required :  'please confirm the password',
-            validate : {
-               required: (value) => value === password || 'password mismatch!'
-            }
-            })}/>
-              {errors.passwordconfirm && (
-        <span className={classes.error}>{errors.passwordconfirm.message}</span>
-      )}
-      </FormControl>
+        <form className={classes.form} onSubmit={handleSubmit(onSubmit)} method="post" noValidate>
+       
+            <FormInputText name='name' label="Your name" control={control} register={register} errors={ errors}/>
+            <FormInputText name='email' label="Email" control={control} register={register} errors={ errors}/>
+            <FormInputText name='phone' label="Phone" control={control} register={register} errors={ errors}/>
+            <FormInputText name='password' label="Password" control={control} register={register} errors={ errors}/>
+            <FormInputText name='passwordconfirm' label="Re-enter password" control={control} register={register} errors={ errors}/>
+            
            <Button
             type="submit"
             fullWidth
@@ -189,16 +151,16 @@ export default function SignUp() {
           >
             Continue
           </Button>
-          <Typography  variant="body2"style={{fontWeight : '500', fontSize:"11.43px", marginTop : '3px'}}>
+          <Typography  variant="body2"style={{fontWeight : 'bold', fontSize:"11.43px", marginTop : '3px'}}>
           By creating an account, you agree to Amazon's Conditions of Use and Privacy Notice.
           </Typography>
 
           <Box mt="25px" pl={0}  display="flex" alignItems="center" padding={0} >
-         <Typography  variant="body2"style={{fontWeight : '500', fontSize:"12px", marginTop : '3px'}}>
+         <Typography  variant="body2"style={{fontWeight : 'bold', fontSize:"12px", marginTop : '3px'}}>
           Already have an account?
           </Typography>
          <Link href="#" variant="body2" style={{color: '#1769aa', fontSize : '14px', paddingLeft : '3px',
-        paddingTop : '3px'}} onClick={() => triggerSignIn(true) /* sets the main signIn to true*/}>
+        paddingTop : '3px'}} onClick={() => setAuthView('sign_in') /* sets the main signIn to true*/}>
                 Sign-In
               </Link>
               <ArrowRightIcon />

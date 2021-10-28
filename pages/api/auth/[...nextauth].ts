@@ -1,20 +1,33 @@
-import NextAuth, { User } from 'next-auth'
+import NextAuth from 'next-auth'
 import prisma from  '../../../src/prisma'
 import bcrypt from 'bcrypt'
 import { PrismaAdapter } from "@next-auth/prisma-adapter"
 import Providers from "next-auth/providers"
 //import Credentials from '../../auth/credentials-signin';
 
+ type User ={
+        id: string
+      name: string | null
+      email: string | null 
+      phone: string | null
+      picture : string | null 
+      password : string
+}
 
+ const idContainsOnlyDigits = (id : string ): boolean => {
+      return id.match(/^[0-9]+$/) != null ? true : false 
+ }
+   
  const getUserByEmail  =  async (id: string) => {
-     const user  =  await prisma.user.find({
+     const user: User | null  =  await prisma.user.findUnique({
         where : {
               email:  id
-            },
-            select : {
+       },
+        select : {
               id : true ,
               name : true , 
-              email :  true ,
+              email: true,
+              phone: true,
               picture : true, 
               password : true
             }
@@ -22,15 +35,16 @@ import Providers from "next-auth/providers"
      return user 
 }
  
-const getUserNumber  =  async (id: number) => {
-     const user  =  await prisma.user.findUnique({
+const getUserNumber =  async (id: string) => {
+     const user: User | null  =  await prisma.user.findUnique({
         where : {
-              phone:  id.toString() // Perform the migrations first
+              phone:  id
             },
             select : {
               id : true ,
               name : true , 
-              email :  true ,
+              email: true,
+              phone: true,
               picture : true, 
               password : true
             }
@@ -55,13 +69,14 @@ export default NextAuth ({
         password: {  type: 'password'} 
      },
       async authorize(credentials, req)  {  
-         // console.log(credentials)
+          //console.log(credentials)
          // const {id ,  password} = credentials
           //const userEmail =  credentials.userId ??  userId;
-          // Add logic here to look up the user from the credentials supplied
-        const user = (typeof credentials.id === 'string') ? await getUserByEmail(credentials.id) :
-             await getUserNumber(credentials.id)
-         
+           // Add logic here to look up the user from the credentials supplied
+        
+        const user = idContainsOnlyDigits(credentials.id) ? await getUserNumber(credentials.id) : 
+           await getUserByEmail(credentials.id)  
+           
   
           if (user) {
             // console.log(process.env.NEXTAUTH_SECRET)
@@ -69,17 +84,17 @@ export default NextAuth ({
               //  return  result  ? Promise.resolve(user) : Promise.reject(err)
             //}); 
            
-          const crosscheckPassword = bcrypt.compareSync(credentials.password, user.password)
+          const crosscheckPassword = await bcrypt.compareSync(credentials.password, user.password)
             if(crosscheckPassword) {
             return Promise.resolve(user)
            }  else { 
-             return  Promise.reject("/auth/credentials-signin?error=Invalid Password")}
+             return  Promise.reject(`${process.env.NEXTAUTH_URL}/auth/credentials-signin?error=Invalid Password`)}
            
           } else {
-
-              return Promise.reject("/auth/credentials-signin?error=Invalid Username and Password combination!")
+                 
+              return Promise.reject(`${process.env.NEXTAUTH_URL}/auth/credentials-signin?error=Invalid Username and Password combination!`)
           }
-  
+            
           }
          
          // return Promise.resolve(null)
@@ -168,7 +183,7 @@ export default NextAuth ({
   pages: {
     signIn: '/auth/credentials-signin',
     //signOut: '/api/auth/signout',
-   // error: '/auth/credentials-signin', // Error code passed in query string as ?error=
+    //error: '/auth/credentials-signin', // Error code passed in query string as ?error=
     //verifyRequest: '/api/auth/verify-request', // (used for check email message)
     //newUser: null // If set, new users will be directed here on first sign in
   },

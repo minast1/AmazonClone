@@ -37,9 +37,7 @@ function DefaultStep() {
   const classes = useStyles();
 
  // console.log(userId);
-  const idContainsOnlyDigits = (id : string ): boolean => {
-      return id.match(/^[0-9]+$/) != null ? true : false 
-   }
+ 
 
     return (
       <React.Fragment>
@@ -61,20 +59,10 @@ function DefaultStep() {
               
               <BootstrapInput
                 {...register("id", {required : 'Please enter a valid email or phone number'})}
-                value={userId}
+                value={value}
                fullWidth 
                error={!!errors.id}
-                onChange={(e) => {
-                  if (idContainsOnlyDigits(e.target.value)) {
-                      authStore.setState({ userId: Number(e.target.value) })
-                      onChange(Number(userId))
-                  }
-                  else {
-                     authStore.setState({ userId: e.target.value })
-                  onChange(userId)
-                   }
-                  
-                }}
+                onChange={onChange }
                 />
           }
            />

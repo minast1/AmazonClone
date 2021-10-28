@@ -94,13 +94,15 @@ export default function SignIn() {
      
     data.callbackUrl = `${process.env.NEXT_PUBLIC_URL}`
        // console.log(data)
-     signIn('credentials' , data );
+     signIn('credentials' , data  );
     methods.reset();
     authStore.setState({ userId: '', password: '' });
 
     // console.log(data)
 
   }
+
+  ////console.log(error);
   return (
       <div>
     <Container component="main" maxWidth="xs"  >
@@ -142,7 +144,7 @@ export default function SignIn() {
       <Box className={classes.signup}>
          
           <Button color="inherit" variant='contained' disableElevation={true} 
-          fullWidth size='small' onClick={ () => setAuthView /* sets the main signIn to false*/}> 
+          fullWidth size='small' onClick={ () => setAuthView('sign_up') /* sets the main signIn to false*/}> 
               Create your Amazon account
           </Button>
       </Box>

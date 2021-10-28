@@ -80,6 +80,9 @@ const useStyles = makeStyles(theme => ({
   paper: {
     marginRight: theme.spacing(2),
   },
+  image: {
+    objectFit: 'contain'
+  }
  
 }))
 
@@ -94,9 +97,9 @@ const Navbar = ({session}: AppProps) => {
       
         <React.Fragment>
         <AppBar position="fixed" elevation={0} className={classes.appBarRoot} > 
-        <Toolbar className={classes.toolbar}>
-          <ButtonBase edge="start" className={classes.menuButton} color="inherit" aria-label="menu" disableRipple={true}>
-            <Image src='/amazon_white.png' width="95px" height="29px" style={{objectFit : 'contain'}}/>
+        <Toolbar>
+          <ButtonBase  className={classes.menuButton} color="inherit" aria-label="menu" disableRipple={true}>
+              <Image src='/amazon_white.png' width="95px" height="29px" className={ classes.image}/>
           </ButtonBase> 
             
 

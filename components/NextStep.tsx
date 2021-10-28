@@ -64,18 +64,16 @@ function NextStep() {
           <Controller
             name="password"
             control={control}
-            render={({ field: { onChange } }) =>
+            render={({ field: { onChange, value } }) =>
               
               <BootstrapInput 
                {...register("password", {required : 'please enter your password'})}
                 fullWidth 
                 type="password"
+                value={value}
                 error={!!errors.password}
                 autoFocus={false}
-                 onChange={(e) => {
-                  authStore.setState({ password: e.target.value })
-                   onChange(password)
-                }}
+                 onChange={onChange}
                 />
                  }
               />
