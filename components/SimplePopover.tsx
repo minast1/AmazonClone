@@ -81,7 +81,7 @@ export default function SimplePopover({session}: AppProps) {
             <React.Fragment>
                    <Button variant="contained" color='primary' style={{width : '100%'}} href="/auth/credentials-signin">Sign in</Button>
         <Box alignSelf="center" style={{color : 'gray'}} pt={1} fontSize="11.5px">New customer? <Link 
-        className={classes.link}>start here</Link></Box>
+        className={classes.link} href="/auth/credentials-signin">start here</Link></Box>
             </React.Fragment>
           )}
         

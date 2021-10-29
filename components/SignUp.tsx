@@ -111,11 +111,17 @@ export default function SignUp() {
 
     const newUser: ResponseData = await response.json();
     if (!response.ok) {
-        authStore.setState({error: newUser.message})
+      authStore.setState({ error: newUser.message })
+      return; 
     }
 
     // If the response has a status of 200, sign the new user in 
-     signIn('credentials' , {id: data.email, password: data.password}  );
+     
+    signIn('credentials', {
+      id: data.email,
+      password: data.password,
+      callbackUrl: `${process.env.NEXT_PUBLIC_URL}`
+    });
        reset();
   }
   

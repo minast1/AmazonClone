@@ -57,6 +57,7 @@ function FormInputText({ errors, name, control, label, register}: AppProps) {
                         value={value}
                         {...register(name)}
                         onChange={onChange}
+                        type={name=== 'password' || name==='passwordconfirm'? 'password' : 'text' }
                         autoComplete={name === 'email' ? 'email' : undefined}
                     />
             }
