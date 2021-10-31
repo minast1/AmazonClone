@@ -10,15 +10,11 @@ import Image from 'next/image';
 import  Link from '@material-ui/core/Link';
 
 
-
-
-
-
-
 const useStyles = makeStyles({
   root: {
-        minWidth: 290,
-        minHeight: 420
+        minWidth: 310,
+        minHeight: 245,
+        position: 'relative'
   },
   bullet: {
     display: 'inline-block',
@@ -32,35 +28,22 @@ const useStyles = makeStyles({
      marginBottom: 12,
     },
     image: {
-      objectFit: 'cover',
-
+      objectFit: 'cover'
   }
 });
 
 type AppProps = {
-    title: string
     image: StaticImageData
-    linkText: string
 }
 
-export default function ItemContainer({title , image, linkText}: AppProps) {
+export default function ImageItemContainer({image}: AppProps) {
   const classes = useStyles();
 
   return (
     <Card className={classes.root} variant="outlined">
-      <CardContent>
-        <Typography variant="h3" style={{fontSize: '1.2rem' , fontWeight: 600}}>
-          {title}
-        </Typography>
-       
-        <Box pt={2} display="flex" alignItems="center" justifyContent="center">
-                  <Image src={image} width={274} height={300} className={classes.image}/>
-              </Box>
-            
-      </CardContent>
-      <CardActions style={{marginLeft: 10}}>
-              <Link>{linkText }</Link> 
-      </CardActions>
+          <CardContent>
+              <Image src={ image} layout="fill" objectFit="cover"/>
+          </CardContent>
     </Card>
   );
 }

@@ -15,10 +15,10 @@ import  Link from '@material-ui/core/Link';
 
 
 
-const useStyles = makeStyles({
+const useStyles = makeStyles(theme => ({
   root: {
         minWidth: 290,
-        minHeight: 420
+        minHeight: 60
   },
   bullet: {
     display: 'inline-block',
@@ -32,35 +32,39 @@ const useStyles = makeStyles({
      marginBottom: 12,
     },
     image: {
-      objectFit: 'cover',
+      objectFit: 'cover'
+    },
+     submit: {
+    margin: theme.spacing(1, 0, 2),
+    
+  },
+}));
 
-  }
-});
 
-type AppProps = {
-    title: string
-    image: StaticImageData
-    linkText: string
-}
-
-export default function ItemContainer({title , image, linkText}: AppProps) {
+export default function ItemWithButtonContainer() {
   const classes = useStyles();
 
   return (
     <Card className={classes.root} variant="outlined">
       <CardContent>
         <Typography variant="h3" style={{fontSize: '1.2rem' , fontWeight: 600}}>
-          {title}
+          Sign in for the best experience
         </Typography>
        
-        <Box pt={2} display="flex" alignItems="center" justifyContent="center">
-                  <Image src={image} width={274} height={300} className={classes.image}/>
+        <Box pt={2}>
+                   <Button
+             fullWidth
+             color="primary"          
+            variant="contained"
+              disableElevation={true}         
+             size='small'
+             className={classes.submit}
+           >
+             Sign in securely
+           </Button>
               </Box>
             
       </CardContent>
-      <CardActions style={{marginLeft: 10}}>
-              <Link>{linkText }</Link> 
-      </CardActions>
     </Card>
   );
 }

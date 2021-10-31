@@ -8,10 +8,7 @@ import Typography from '@material-ui/core/Typography';
 import  Box  from '@material-ui/core/Box';
 import Image from 'next/image';
 import  Link from '@material-ui/core/Link';
-
-
-
-
+import { Grid } from '@material-ui/core';
 
 
 
@@ -32,18 +29,22 @@ const useStyles = makeStyles({
      marginBottom: 12,
     },
     image: {
-      objectFit: 'cover',
-
+      objectFit: 'cover'
   }
 });
 
-type AppProps = {
-    title: string
+type GridProps = {
     image: StaticImageData
     linkText: string
 }
 
-export default function ItemContainer({title , image, linkText}: AppProps) {
+type AppProps = {
+    title: string
+    items: GridProps[],
+    mainLinkText: string
+}
+
+export default function ItemGridContainer({title , items, mainLinkText}: AppProps) {
   const classes = useStyles();
 
   return (
@@ -52,14 +53,23 @@ export default function ItemContainer({title , image, linkText}: AppProps) {
         <Typography variant="h3" style={{fontSize: '1.2rem' , fontWeight: 600}}>
           {title}
         </Typography>
-       
-        <Box pt={2} display="flex" alignItems="center" justifyContent="center">
-                  <Image src={image} width={274} height={300} className={classes.image}/>
-              </Box>
+              <Grid container >
+                  {items.map(({ image, linkText }, index) =>
+                      
+                   <Grid item xs={6} key={index}>
+                      <Box mt={2}>
+                        <Image src={image} width={140} height={117} />
+                         <span>{ linkText}</span>
+                      </Box>
+                     
+                  </Grid>
+                 )}
+                 
+              </Grid>
             
       </CardContent>
       <CardActions style={{marginLeft: 10}}>
-              <Link>{linkText }</Link> 
+              <Link>{mainLinkText }</Link> 
       </CardActions>
     </Card>
   );
