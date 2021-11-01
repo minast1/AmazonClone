@@ -1,7 +1,7 @@
 import React from 'react';
 import Box from '@material-ui/core/Box';
 import { makeStyles , fade} from '@material-ui/core/styles';
-import { AppBar, ButtonBase, InputBase,  Paper, Toolbar } from '@material-ui/core';
+import { AppBar, Badge, ButtonBase, InputBase,  Paper, Toolbar } from '@material-ui/core';
 import Image from 'next/image';
 import LocationOnOutlinedIcon from '@material-ui/icons/LocationOnOutlined';
 import SearchIcon from '@material-ui/icons/Search';
@@ -136,8 +136,10 @@ const Navbar = ({session}: AppProps) => {
               </ButtonBase>
           
           <Box display='flex' alignItems='center'ml='auto'>
-            <ButtonBase disableRipple>
+              <ButtonBase disableRipple>
+                <Badge badgeContent={1} color="primary">
             <ShoppingCartOutlinedIcon fontSize='large'/>
+                </Badge>
             <Box fontWeight='fontWeightBold'>Cart</Box>
             </ButtonBase>
           </Box>

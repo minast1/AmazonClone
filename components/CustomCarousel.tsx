@@ -1,7 +1,18 @@
 import React from 'react'
 import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a loader
 import { Carousel } from 'react-responsive-carousel';
+import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
+import { Box } from '@material-ui/core';
+import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
 
+
+
+
+type CustomProps = {
+    clickHandler: () => void
+    hasPrev: boolean
+    label: string
+ }
 
 function CustomCarousel() {
     return (
@@ -11,6 +22,21 @@ function CustomCarousel() {
             showIndicators={false}
             showThumbs={false}
             showStatus={false}
+            renderArrowPrev={
+                (clickHandler: () => void, hasPrev: boolean, label: string) => (
+                    <Box  position="absolute" top={100} left="1%" zIndex="modal">
+                        <ArrowBackIosIcon fontSize="large" onClick={clickHandler}/>
+                    </Box> 
+                   
+                )
+            }
+            renderArrowNext={
+                (clickHandler: () => void, hasPrev: boolean, label: string) => (
+                     <Box  position="absolute" top={100} right="1%" zIndex="modal">
+                        <ArrowForwardIosIcon fontSize="large" onClick={clickHandler} />
+                    </Box> 
+                )
+            }
             stopOnHover={true}
         >
                 <div>

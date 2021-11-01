@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import Container from '@material-ui/core/Container';
 import { makeStyles } from '@material-ui/core/styles';
-import {  Box, Grid, Link, Toolbar } from '@material-ui/core';
+import { Box, Button, Divider, Link, Toolbar, Typography } from '@material-ui/core';
+import Grid from '@material-ui/core/Grid';
 import SecondaryToolbar from '../components/SecondaryToolbar';
 import Navbar from '../components/Navbar';
 import { useSession, getSession } from 'next-auth/client'
@@ -52,7 +53,19 @@ const useStyles = makeStyles(theme => ({
     paddingTop: 110,
     position: 'relative',
     paddingRight: 17
-  }
+  },
+     submit: {
+       margin: theme.spacing(0.5, 0, 0.5),
+       width: 240
+    
+  },
+  lowerMain: {
+    display: 'flex',
+    alignItems: 'center',
+    flexDirection: 'column',
+    paddingTop: 40,
+    paddingBottom: 20
+     }
 }))
 
 const Home = () => {
@@ -60,7 +73,7 @@ const Home = () => {
   const classes = useStyles();
   
   return (
-    <div style={{backgroundColor: 'yellow'}}>
+    <div>
       
         <header>
         <Navbar session={session}/>
@@ -72,7 +85,7 @@ const Home = () => {
       <Container className={classes.carouselContainer} disableGutters={true} maxWidth={false}>
        
           <CustomCarousel />
-
+              
           <Grid
             container
             direction="row"
@@ -131,6 +144,30 @@ const Home = () => {
           </Grid>
         </Container>
       
+      </main>
+      <Container maxWidth={false} disableGutters={true} style={{paddingTop: 50, paddingBottom: 20}}>
+        <Divider />
+        <Container maxWidth="xs" className={classes.lowerMain}>
+          <Typography
+            gutterBottom={false}
+            variant="caption"
+          >See personalized recommendations</Typography>
+            <Button
+             color="primary"          
+            variant="contained"
+            href="/auth/credentials-signin"
+              disableElevation={true}         
+             size='small'
+             className={classes.submit}
+           >
+             Sign in 
+          </Button>
+          <Typography style={{ fontSize: 10 }}>New customer? <Link>Start here.</Link></Typography>
+        </Container>
+         <Divider/>
+         </Container>
+      <main>
+
       </main>
     </div>
 )}  

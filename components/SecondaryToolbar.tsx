@@ -33,7 +33,11 @@ const useStyles = makeStyles(theme => ({
        }
    },
    menu: {
-       marginRight : theme.spacing(2)
+       marginRight: theme.spacing(2),
+       '&:hover': {
+           padding: 4,
+           border:  '1px solid white',
+       }
    }
 }))
   

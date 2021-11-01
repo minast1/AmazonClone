@@ -22,7 +22,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 type AppProps = {
-  session: Session
+  session: Session | null
 }
 
 export default function SimplePopover({session}: AppProps) {
