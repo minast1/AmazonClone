@@ -44,3 +44,7 @@ export const schema = yup.object({
   passwordconfirm: yup.string().oneOf([yup.ref('password'), null], 'password mismatch!').required('This field is required')
 })
 
+export const fetcher = (url: string) => fetch(url).then(r => r.json());
+
+export const categories = ["electronics", "jewelery", "men's clothing", "women's clothing"];
+

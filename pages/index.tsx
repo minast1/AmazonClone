@@ -23,7 +23,7 @@ import mini4 from '../public/mini4.jpg';
 import ItemWithButtonContainer from '../components/ItemWithButtonContainer';
 import ImageItemContainer from '../components/ImageItemContainer';
 import ItemGridContainer from '../components/ItemGridContainer';
-
+import ButtonBase from '@material-ui/core/ButtonBase';
 
 
 
@@ -93,13 +93,20 @@ const Home = () => {
             className={classes.gridContainer}
             >
             <Grid item xs={3}>
+              <ButtonBase disableRipple={true} href="/products/AmazonBasics">
               <ItemContainer title="AmazonBasics" image={item1} linkText="See more"/>
+
+                  </ButtonBase>
             </Grid>
             <Grid item xs={3}>
+               <ButtonBase disableRipple={true} href="/products/Shop by Category">
               <ItemContainer title="Shop by Category" image={item7} linkText="Shop now"/>
+              </ButtonBase>
             </Grid>
             <Grid item xs={3}>
+               <ButtonBase disableRipple={true} href="/products/Deals & Promotions">
               <ItemContainer title="Deals & Promotions" image={item3} linkText="Shop now"/>
+              </ButtonBase>
             </Grid>
             <Grid item xs={3} container direction="column" spacing={2}>
               <Grid item>
@@ -121,13 +128,18 @@ const Home = () => {
           //paddingLeft: 15
         }}>
           <Grid container spacing={3} alignItems="flex-start"   className={classes.secondMain}>
-             <Grid item xs={3}>
+            <Grid item xs={3}>
+               <ButtonBase disableRipple={true} href="/products/Oculus">
               <ItemContainer title="Oculus" image={item9 } linkText="Shop now"/>
+              </ButtonBase>
             </Grid>
-             <Grid item xs={3}>
+            <Grid item xs={3}>
+               <ButtonBase disableRipple={true} href="/products/Computers & Accessories">
               <ItemContainer title="Computers & Accessories" image={item10} linkText="Shop now"/>
+              </ButtonBase>
             </Grid>
-             <Grid item xs={3}>
+            <Grid item xs={3}>
+               <ButtonBase disableRipple={true} href="/products/Gaming Accessories">
               <ItemGridContainer
                 title="Gaming accessories"
                 mainLinkText="See more"
@@ -137,9 +149,12 @@ const Home = () => {
                   { image: mini3, linkText: 'Chairs' },
                   {image: mini4, linkText: 'Computer mice'}
                 ] }/>
+                </ButtonBase>
             </Grid>
-             <Grid item xs={3}>
+            <Grid item xs={3}>
+               <ButtonBase disableRipple={true} href="/products/Easy Returns">
               <ItemContainer title="Easy returns" image={image14} linkText="Learn more"/>
+              </ButtonBase>
             </Grid>
           </Grid>
         </Container>
