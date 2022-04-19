@@ -10,8 +10,11 @@ import SecondaryToolbar from '../../components/SecondaryToolbar';
 import Navbar from '../../components/Navbar';
 import { useSession } from 'next-auth/client'
 import { useRouter } from 'next/router'
-import { categories } from '../../src/constants';
+import { categories, Product, fetcher } from '../../src/constants';
 import CategoryProducts from '../../components/CategoryProducts';
+import ItemCard from '../../components/ItemCard';
+import useSWR from 'swr'
+
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -32,6 +35,7 @@ const useStyles = makeStyles(theme => ({
 
 const Products = () => {
   const [session, loading] = useSession();
+   const {data , error} = useSWR<Product[]>(`https://fakestoreapi.com/products?limit=12`, fetcher)
   const router = useRouter();
   const { pid } = router.query;
 
@@ -62,18 +66,44 @@ const Products = () => {
               }
               
             </Grid>
-            <Grid item xs={ 10} container direction="column" className={classes.rightContainer}>
+            <Grid item xs={10} container className={classes.rightContainer}>
+              <Grid item xs={12}>
               <Typography variant="h5" gutterBottom>{pid}</Typography>
               <Typography variant="body2" gutterBottom>The fucking subheader and mini categories goes here</Typography>
               <Box border="1px solid lightgray" mt={4} p={2} borderRadius={15}>
                 <Typography variant="body1">
                   1-12 of over 90,000 results for <span style={{fontWeight: 'bold', color: '#ff5722'}}>{pid }</span>
                 </Typography>
-              </Box>
+                </Box>
+                <Box mt={4} display="flex" alignItems="center" flexWrap="wrap" justifyContent="center">
+                 
+                 {data && data.map(({ id, title, price, image, description, rating = Math.floor(Math.random() * 6)}) => 
+                    
+                   <Box
+                     onClick={() => router.push({
+                       pathname: '/items/[pid]',
+                       query: {
+                         pid: id,
+                         title: title,
+                       }
+                     })}
+                      p={2}
+                      width={355}
+                      key={id}>
+                     <ItemCard
+                       image={image}          
+                       price={price}
+                       title={title}
+                       description={description}
+                     />
+                   </Box>
+                  )}
+                </Box>
+               
+              </Grid>
+             
+              </Grid>
             </Grid>
-          </Grid>
-        
-       
      </Container>
       </main>
 
