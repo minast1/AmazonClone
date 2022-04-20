@@ -39,6 +39,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         res.status(422).json({ message: 'Phone Number exists alrready' });
         return;
     };
+    
 
     const user = await prisma.user.create({
         data: {

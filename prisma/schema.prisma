@@ -15,7 +15,6 @@ model User {
   phone         String?   @unique
   email         String?   @unique
   password      String    @unique
-  user_id       Int
   emailVerified DateTime?
   picture       String?
   createdAt     DateTime  @default(now())
