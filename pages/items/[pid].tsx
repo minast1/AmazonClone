@@ -76,7 +76,7 @@ const Item = () => {
     setAge(event.target.value as string);
   };
   const classes = useStyles();
-  console.log(age);
+
   return (
     <div>
       <header>
