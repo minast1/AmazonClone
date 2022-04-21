@@ -11,7 +11,7 @@ export interface CartState {
 }
 
 
-export const authStore = create<CartState>((set, get) => ({
+export const store = create<CartState>((set, get) => ({
     products: [],
     subTotal: 0 ,
     addToCart: (product) => {
