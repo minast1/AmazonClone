@@ -11,7 +11,7 @@ const useStyles = makeStyles((theme) => ({
     marginTop: 30,
     border: "1px solid green",
     //width: "60%",
-    backgroundColor: "white",
+    //backgroundColor: "white",
   },
   rightSideRoot: {
     // marginLeft: theme.spacing(2),
