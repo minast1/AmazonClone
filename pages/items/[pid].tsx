@@ -12,7 +12,7 @@ import SecondaryToolbar from "../../components/SecondaryToolbar";
 import Navbar from "../../components/Navbar";
 import { useSession } from "next-auth/client";
 import { useRouter } from "next/router";
-import { categories, Product, fetcher } from "../../src/constants";
+import { categories, Product, fetcher, Rating } from "../../src/constants";
 import Image from "next/image";
 import useSWR from "swr";
 import CardContent from "@material-ui/core/CardContent";
@@ -26,6 +26,7 @@ import MenuItem from "@material-ui/core/MenuItem";
 import LockIcon from "@material-ui/icons/Lock";
 import InputLabel from "@material-ui/core/InputLabel";
 import FormControl from "@material-ui/core/FormControl";
+import { store } from "../../src/cartStore";
 
 const useStyles = makeStyles((theme) => ({
   root: {},
@@ -69,11 +70,18 @@ const Item = () => {
     `https://fakestoreapi.com/products/${pid}`,
     fetcher
   );
-  const rating = Math.floor(Math.random() * 6) + 1;
 
-  const [age, setAge] = React.useState("");
+  const addItem = store((state) => state.addToCart);
+
+  const total = store((state) => state.subTotal);
+  const [quantity, setQuantity] = React.useState<number>(1);
   const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
-    setAge(event.target.value as string);
+    setQuantity(Number(event.target.value));
+  };
+  const addToCart = (item: Product) => {
+    const updatedItem = { ...item, quantity: quantity };
+
+    addItem(updatedItem);
   };
   const classes = useStyles();
 
@@ -120,7 +128,7 @@ const Item = () => {
                   Platform:{" "}
                 </Typography>
 
-                <RatingContainer rating={rating} />
+                {data && <RatingContainer rating={data.rating} />}
                 <Divider />
               </Grid>
               <Grid item style={{ paddingBottom: 5 }}>
@@ -187,7 +195,7 @@ const Item = () => {
                     <Select
                       labelId="demo-customized-select-label"
                       id="demo-customized-select"
-                      value={age}
+                      value={quantity}
                       autoWidth={true}
                       defaultValue={1}
                       displayEmpty={true}
@@ -213,9 +221,10 @@ const Item = () => {
                     fullWidth
                     color="secondary"
                     onClick={() => {
-                      router.push({
+                      addToCart(data as Product);
+                      /*router.push({
                         pathname: "/cart",
-                      });
+                      });*/
                     }}
                     variant="contained"
                     disableElevation={false}

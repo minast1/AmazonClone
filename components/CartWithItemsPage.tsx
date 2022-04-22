@@ -13,6 +13,7 @@ import { CardHeader } from "@material-ui/core";
 import Image from "next/image";
 import Chip from "@material-ui/core/Chip";
 import RatingContainer from "./RatingContainer";
+import { store } from "../src/cartStore";
 
 const useStyles = makeStyles((theme) => ({
   itemListRoot: {
@@ -28,6 +29,8 @@ const useStyles = makeStyles((theme) => ({
 
 const CartWithItemsPage = () => {
   const [checked, setChecked] = React.useState(true);
+  const total = store((state) => state.subTotal);
+  const items = store((state) => state.products);
   const rating = Math.floor(Math.random() * 6) + 1;
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -51,7 +54,9 @@ const CartWithItemsPage = () => {
           <Grid item>
             <Card style={{ maxWidth: 295 }}>
               <CardContent>
-                <Typography variant="h6">Subtotal (1 item) : $87.99</Typography>
+                <Typography variant="h6">
+                  Subtotal ({`${items.length} items`}) : {total}
+                </Typography>
                 <FormControlLabel
                   control={
                     <Checkbox
@@ -113,9 +118,7 @@ const CartWithItemsPage = () => {
                         42" Long Extension
                       </Typography>
                     </Grid>
-                    <Grid item>
-                      <RatingContainer rating={rating} />
-                    </Grid>
+                    <Grid item>{/*<RatingContainer rating={rating} />*/}</Grid>
                     <Grid item>
                       <Typography variant="body2" style={{ marginBottom: 2 }}>
                         $117.49

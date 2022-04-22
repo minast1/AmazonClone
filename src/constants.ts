@@ -48,13 +48,19 @@ export const fetcher =  (url: string) => fetch(url).then(r => r.json());
 
 export const categories = ["electronics", "jewelery", "men's clothing", "women's clothing"];
 
+
+export type Rating = {
+  rate: number
+  count: number
+}
+
 export interface Product {
     id: number
     title: string
     price: number
     category: string
   description: string
-  rating?:number
+  rating:Rating
   image: string
   quantity? : number
 }

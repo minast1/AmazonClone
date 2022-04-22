@@ -17,6 +17,7 @@ import EmptyCartPage from "../components/EmptyCartPage";
 
 const Cart = () => {
   const [session, loading] = useSession();
+
   const cartItems = store((state) => state.products);
   const classes = useStyles();
 
