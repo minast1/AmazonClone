@@ -9,6 +9,9 @@ import Typography from "@material-ui/core/Typography";
 import ButtonBase from "@material-ui/core/ButtonBase";
 import Box from "@material-ui/core/Box";
 import CardActions from "@material-ui/core/CardActions";
+import List from "@material-ui/core/List";
+import ListItem from "@material-ui/core/ListItem";
+import { store } from "../src/cartStore";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -31,7 +34,7 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 const CartItemsList = () => {
   const classes = useStyles();
-
+  const items = store((state) => state.products);
   return (
     <Card>
       <CardHeader
@@ -46,7 +49,20 @@ const CartItemsList = () => {
         }
       />
       <CardContent className={classes.content}>
-        <ProductInCart />
+        <List component="nav">
+          {items.length &&
+            items.map((item) => (
+              <ListItem key={item.id}>
+                <ProductInCart
+                  id={item.id}
+                  description={item.description}
+                  quantity={item.quantity as number}
+                  price={item.price}
+                  image={item.image}
+                />
+              </ListItem>
+            ))}
+        </List>
       </CardContent>
       <CardActions style={{ borderTop: "1px solid lightgray" }}>
         <Box flexGrow={1} />

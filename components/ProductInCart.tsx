@@ -12,14 +12,21 @@ import Box from "@material-ui/core/Box";
 import ButtonBase from "@material-ui/core/ButtonBase";
 
 type AppProps = {
+  id: number;
   description: string;
   quantity: number;
   price: number;
   image: string;
 };
 
-export default function ProductInCart() {
-  const [checked, setChecked] = React.useState(true);
+export default function ProductInCart({
+  description,
+  quantity,
+  price,
+  image,
+  id,
+}: AppProps) {
+  const [checked, setChecked] = React.useState(false);
   const [age, setAge] = React.useState<number>(0);
   const handleSelectChange = (event: React.ChangeEvent<{ value: unknown }>) => {
     setAge(Number(event.target.value));
@@ -43,13 +50,7 @@ export default function ProductInCart() {
           "aria-label": "primary checkbox",
         }}
       />
-      <Image
-        width={200}
-        height={150}
-        alt=""
-        src="/testImg.jpg"
-        objectFit="cover"
-      />
+      <Image width={200} height={150} alt="" src={image} objectFit="cover" />
       <Box
         display="flex"
         flexDirection="column"
@@ -66,8 +67,7 @@ export default function ProductInCart() {
             color: "black",
           }}
         >
-          Amazon Basics Heavy-Duty Extension Dual Arm, Full Motion Articulating
-          TV Mount for 37-80 inch TVs up to 132 lbs, fits LED LC…
+          {description}
         </Typography>
 
         <Box display="flex">
@@ -178,7 +178,7 @@ export default function ProductInCart() {
           fontSize: 16,
         }}
       >
-        $87.99
+        {`${price} $`}
       </Box>
     </>
   );

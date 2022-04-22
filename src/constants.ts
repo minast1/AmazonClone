@@ -51,7 +51,7 @@ export const categories = ["electronics", "jewelery", "men's clothing", "women's
 export interface Product {
     id: number
     title: string
-    price: string
+    price: number
     category: string
   description: string
   rating?:number

@@ -36,8 +36,7 @@ const Cart = () => {
           paddingTop: 1,
         }}
       >
-        {/*cartItems.length ? <CartWithItemsPage /> : <EmptyCartPage />*/}
-        <CartWithItemsPage />
+        {cartItems.length ? <CartWithItemsPage /> : <EmptyCartPage />}
       </Container>
     </div>
   );
