@@ -81,7 +81,8 @@ const Item = () => {
   const addToCart = (item: Product) => {
     const updatedItem = { ...item, quantity: quantity };
 
-    addItem(updatedItem);
+    // addItem(updatedItem);
+    // update db
   };
   const classes = useStyles();
 
