@@ -36,7 +36,7 @@ export default function ItemCard({
 
   return (
     <Card className={classes.root} elevation={0}>
-      <CardActionArea>
+      <CardActionArea disableRipple>
         <Image
           height={300}
           width={315}
