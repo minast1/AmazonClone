@@ -27,6 +27,7 @@ import LockIcon from "@material-ui/icons/Lock";
 import InputLabel from "@material-ui/core/InputLabel";
 import FormControl from "@material-ui/core/FormControl";
 import { store } from "../../src/cartStore";
+import { Cart } from "@prisma/client";
 
 const useStyles = makeStyles((theme) => ({
   root: {},
@@ -70,19 +71,34 @@ const Item = () => {
     `https://fakestoreapi.com/products/${pid}`,
     fetcher
   );
-
+  //console.log(session?.user?.email);
   const addItem = store((state) => state.addToCart);
 
   const total = store((state) => state.subTotal);
   const [quantity, setQuantity] = React.useState<number>(1);
+  const clientSideCart = store((state) => state.products);
   const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
     setQuantity(Number(event.target.value));
   };
   const addToCart = (item: Product) => {
-    const updatedItem = { ...item, quantity: quantity };
+    if (session) {
+      const updatedItem = { ...item, quantity: quantity };
 
-    // addItem(updatedItem);
-    // update db
+      addItem(updatedItem);
+      //let updatedStore = store.getState().products;
+
+      // update db
+      const data = { email: session.user?.email, products: updatedItem };
+      const cart = fetch("/api/v2/cart", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+    } else {
+      router.push("/auth/credentials-signin");
+    }
   };
   const classes = useStyles();
 

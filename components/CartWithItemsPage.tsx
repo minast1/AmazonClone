@@ -14,6 +14,8 @@ import Image from "next/image";
 import Chip from "@material-ui/core/Chip";
 import RatingContainer from "./RatingContainer";
 import { store } from "../src/cartStore";
+import { Product } from "../src/cartStore";
+import { Prisma } from "@prisma/client";
 
 const useStyles = makeStyles((theme) => ({
   itemListRoot: {
@@ -27,12 +29,20 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const CartWithItemsPage = () => {
+type appType = {
+  items: any[];
+};
+const CartWithItemsPage = ({ items }: appType) => {
   const [checked, setChecked] = React.useState(true);
-  const total = store((state) => state.subTotal);
-  const items = store((state) => state.products);
-  const rating = Math.floor(Math.random() * 6) + 1;
+  const [total, setTotal] = React.useState(0);
+  React.useEffect(() => {
+    let total = items
+      .map(({ price, quantity }) => Number(price) * quantity)
+      .reduce((prev: number, current: number) => prev + current, 0);
+    setTotal(total);
+  }, [items]);
 
+  //console.log(total);
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setChecked(event.target.checked);
   };
@@ -41,7 +51,7 @@ const CartWithItemsPage = () => {
     <>
       <Grid container spacing={2}>
         <Grid item md={9} className={classes.itemListRoot}>
-          <CartItemsList />
+          <CartItemsList items={items} total={total} />
         </Grid>
         <Grid
           item

@@ -17,6 +17,9 @@ import CategoryDropdown from "./CategoryDropdown";
 import ShoppingCartOutlinedIcon from "@material-ui/icons/ShoppingCartOutlined";
 import { Session } from "next-auth";
 import { store } from "../src/cartStore";
+import { fetcher } from "../src/constants";
+import useSWR from "swr";
+import { Prisma } from "@prisma/client";
 
 const useStyles = makeStyles((theme) => ({
   appBarRoot: {
@@ -92,8 +95,11 @@ type AppProps = {
 };
 const Navbar = ({ session }: AppProps) => {
   const classes = useStyles();
-  const itemsInCart = store((state) => state.products);
-
+  const { data, error } = useSWR(
+    `${process.env.NEXT_PUBLIC_URL}/api/v2/${session?.user?.email}`,
+    fetcher
+  );
+  const itemsInCart = data?.cart.products as Prisma.JsonArray;
   return (
     <div>
       <React.Fragment>
@@ -158,7 +164,7 @@ const Navbar = ({ session }: AppProps) => {
             <Box display="flex" alignItems="center" ml="auto">
               <ButtonBase disableRipple href="/cart">
                 <Badge
-                  badgeContent={itemsInCart.length ? itemsInCart.length : 0}
+                  badgeContent={(itemsInCart && itemsInCart.length) || 0}
                   color="primary"
                 >
                   <ShoppingCartOutlinedIcon fontSize="large" />

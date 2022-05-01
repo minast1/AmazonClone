@@ -4,7 +4,7 @@ import { Rating } from './constants'
 //import createContext from 'zustand/context'
 
 
-type Product =  {
+export type Product =  {
     id: number
     title: string
     price: number

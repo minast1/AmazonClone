@@ -11,7 +11,7 @@ import Box from "@material-ui/core/Box";
 import CardActions from "@material-ui/core/CardActions";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
-import { store } from "../src/cartStore";
+import { Product, store } from "../src/cartStore";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -32,9 +32,13 @@ const useStyles = makeStyles((theme: Theme) =>
     },
   })
 );
-const CartItemsList = () => {
+type appType = {
+  items: any[];
+  total: number;
+};
+const CartItemsList = ({ items, total }: appType) => {
   const classes = useStyles();
-  const items = store((state) => state.products);
+  //const items = store((state) => state.products);
   return (
     <Card>
       <CardHeader
@@ -51,8 +55,8 @@ const CartItemsList = () => {
       <CardContent className={classes.content}>
         <List component="nav">
           {items.length &&
-            items.map((item) => (
-              <ListItem key={item.id}>
+            items.map((item: Product, index) => (
+              <ListItem key={index}>
                 <ProductInCart
                   id={item.id}
                   description={item.description}
@@ -67,8 +71,8 @@ const CartItemsList = () => {
       <CardActions style={{ borderTop: "1px solid lightgray" }}>
         <Box flexGrow={1} />
         <Box style={{ fontSize: 17, fontWeight: 450, color: "black" }}>
-          {" "}
-          Subtotal (1 item) : <span style={{ fontWeight: "bold" }}>$87.99</span>
+          {`Subtotal (${items.length} item)`}:{" "}
+          <span style={{ fontWeight: "bold" }}>{total}</span>
         </Box>
       </CardActions>
     </Card>

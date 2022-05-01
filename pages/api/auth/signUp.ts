@@ -46,7 +46,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             name: name,
             email: email,
             phone: phone, 
-            password: hash
+            password: hash,
+            cart: {
+                create : {}
+            }
         }
     });
         res.status(201).json(user)

@@ -14,11 +14,20 @@ import Image from "next/image";
 import { store } from "../src/cartStore";
 import CartWithItemsPage from "../components/CartWithItemsPage";
 import EmptyCartPage from "../components/EmptyCartPage";
+import { fetcher, Product } from "../src/constants";
+import useSWR from "swr";
+import { Cart, Prisma } from "@prisma/client";
+import LoadingState from "../components/LoadingState";
 
-const Cart = () => {
+const CartPage = () => {
   const [session, loading] = useSession();
-
-  const cartItems = store((state) => state.products);
+  const { data, error } = useSWR(
+    `${process.env.NEXT_PUBLIC_URL}/api/v2/${session?.user?.email}`,
+    fetcher
+  );
+  //console.log(data?.cart);
+  const cartItems = data?.cart.products as Prisma.JsonArray;
+  //console.log(cartItems);
   const classes = useStyles();
 
   return (
@@ -37,13 +46,19 @@ const Cart = () => {
           paddingTop: 1,
         }}
       >
-        {cartItems.length ? <CartWithItemsPage /> : <EmptyCartPage />}
+        {!cartItems ? (
+          <LoadingState />
+        ) : cartItems.length ? (
+          <CartWithItemsPage items={cartItems} />
+        ) : (
+          <EmptyCartPage />
+        )}
       </Container>
     </div>
   );
 };
 
-export default Cart;
+export default CartPage;
 
 const useStyles = makeStyles((theme) => ({
   lowerMain: {
