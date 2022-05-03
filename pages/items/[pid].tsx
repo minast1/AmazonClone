@@ -71,12 +71,9 @@ const Item = () => {
     `https://fakestoreapi.com/products/${pid}`,
     fetcher
   );
-  //console.log(session?.user?.email);
-  const addItem = store((state) => state.addToCart);
 
-  const total = store((state) => state.subTotal);
   const [quantity, setQuantity] = React.useState<number>(1);
-  const clientSideCart = store((state) => state.products);
+
   const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
     setQuantity(Number(event.target.value));
   };
@@ -85,9 +82,6 @@ const Item = () => {
       const uniqueItemId = { id: new Date().getTime() };
       const itemWithUniqueId = Object.assign(item, uniqueItemId);
       const updatedItem = { ...itemWithUniqueId, quantity: quantity };
-
-      addItem(updatedItem);
-      //let updatedStore = store.getState().products;
 
       // update db
       const data = { email: session.user?.email, products: updatedItem };

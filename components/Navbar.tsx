@@ -107,6 +107,7 @@ const Navbar = ({ session }: AppProps) => {
           <Toolbar>
             <ButtonBase
               className={classes.menuButton}
+              href="/"
               color="inherit"
               aria-label="menu"
               disableRipple={true}

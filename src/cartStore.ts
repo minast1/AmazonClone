@@ -16,7 +16,8 @@ export type Product =  {
 }
 
 export interface CartState {
-    id: string
+  id: string
+  categoryId: string | null
     //setId: (to:string) => void
     //products: Product[] | []
     //addToCart: (product: Product) => void
@@ -27,7 +28,8 @@ export interface CartState {
 
 
 export const store = create<CartState>((set, get) => ({
-    id: '',
+  id: '',
+  categoryId: null
    // setId: (to) => set(state => ({id : to}))
 
       
