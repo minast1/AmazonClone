@@ -82,7 +82,9 @@ const Item = () => {
   };
   const addToCart = (item: Product) => {
     if (session) {
-      const updatedItem = { ...item, quantity: quantity };
+      const uniqueItemId = { id: new Date().getTime() };
+      const itemWithUniqueId = Object.assign(item, uniqueItemId);
+      const updatedItem = { ...itemWithUniqueId, quantity: quantity };
 
       addItem(updatedItem);
       //let updatedStore = store.getState().products;

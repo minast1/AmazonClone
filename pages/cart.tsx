@@ -21,13 +21,17 @@ import LoadingState from "../components/LoadingState";
 
 const CartPage = () => {
   const [session, loading] = useSession();
+  const cartId = store((state) => state.id);
   const { data, error } = useSWR(
     `${process.env.NEXT_PUBLIC_URL}/api/v2/${session?.user?.email}`,
     fetcher
   );
-  //console.log(data?.cart);
+
   const cartItems = data?.cart.products as Prisma.JsonArray;
-  //console.log(cartItems);
+  React.useEffect(() => {
+    store.setState({ id: data?.cart.id });
+  }, [data]);
+
   const classes = useStyles();
 
   return (

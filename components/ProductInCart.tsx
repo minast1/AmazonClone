@@ -10,6 +10,9 @@ import SelectBootstrapInput from "./SelectBootstrapInput";
 import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
 import ButtonBase from "@material-ui/core/ButtonBase";
+import useSWR, { useSWRConfig } from "swr";
+import { useSession, getSession } from "next-auth/client";
+import { store } from "../src/cartStore";
 
 type AppProps = {
   id: number;
@@ -28,12 +31,24 @@ export default function ProductInCart({
 }: AppProps) {
   const [checked, setChecked] = React.useState(false);
   const [age, setAge] = React.useState<number>(0);
+  const [session, loading] = useSession();
+
   const handleSelectChange = (event: React.ChangeEvent<{ value: unknown }>) => {
     setAge(Number(event.target.value));
   };
-
+  const { mutate } = useSWRConfig();
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setChecked(event.target.checked);
+  };
+
+  const onDelete = (id: number) => {
+    fetch(`${process.env.NEXT_PUBLIC_URL}/api/v2/${id}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(store.getState().id),
+    }).then((res) =>
+      mutate(`${process.env.NEXT_PUBLIC_URL}/api/v2/${session?.user?.email}`)
+    );
   };
   return (
     <>
@@ -107,6 +122,7 @@ export default function ProductInCart({
           />
           <ButtonBase
             disableRipple
+            onClick={() => onDelete(id)}
             style={{
               paddingLeft: 10,
               paddingRight: 10,

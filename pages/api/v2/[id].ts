@@ -1,5 +1,6 @@
 import { Prisma } from "@prisma/client";
 import { NextApiRequest, NextApiResponse } from "next";
+import { Product } from "../../../src/cartStore";
 import prisma from '../../../src/prisma';
 
 
@@ -19,6 +20,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                select: {
                    cart: {
                        select: {
+                           id:true,
                            products : true 
                        }
                    }
@@ -27,6 +29,26 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
            
            res.json(cartItems)
            break;
+       case 'POST':
+          // console.log(`DEleting...... ${req.body}`)
+           //find the cart and update the products array
+           const cart = await prisma.cart.findFirst({
+               where: { id: req.body },
+               select: { products: true }
+           });
+            
+
+           const cartProducts = cart?.products as any[]
+          const removedItemFromCart = cartProducts?.filter((el) => el.id != id);
+            const updatedUserCart = await prisma.cart.update({
+                where: {id : req.body},
+                data: {
+                    products : removedItemFromCart  //as Prisma.JsonArray
+                },
+                
+                
+             })
+            res.end()
    
        default:
            break;

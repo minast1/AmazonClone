@@ -8,12 +8,12 @@ import prisma from '../../../src/prisma'
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     
     const { method, body } = req;
-    
+   
+ 
     const { email, products } = body;
 
     switch (method) {
         case 'POST':
-          
             let updatedCartItems: any[]= [];
             //find the users cart and Id
             const user = await prisma.user.findFirst({
@@ -33,7 +33,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 where: { userId: user?.id },
                 data: {
                     products : updatedCartItems  //as Prisma.JsonArray
-                }
+                },
+                
                 
              })
 
