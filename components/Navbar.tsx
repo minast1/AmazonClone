@@ -95,10 +95,7 @@ type AppProps = {
 };
 const Navbar = ({ session }: AppProps) => {
   const classes = useStyles();
-  const { data, error } = useSWR(
-    `${process.env.NEXT_PUBLIC_URL}/api/v2/${session?.user?.email}`,
-    fetcher
-  );
+  const { data, error } = useSWR(`/api/v2/${session?.user?.email}`, fetcher);
   const itemsInCart = data?.cart.products as Prisma.JsonArray;
   return (
     <div>
