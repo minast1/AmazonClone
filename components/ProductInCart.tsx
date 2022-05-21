@@ -42,13 +42,11 @@ export default function ProductInCart({
   };
 
   const onDelete = (id: number) => {
-    fetch(`${process.env.NEXT_PUBLIC_URL}/api/v2/${id}`, {
+    fetch(`/api/v2/${id}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(store.getState().id),
-    }).then((res) =>
-      mutate(`${process.env.NEXT_PUBLIC_URL}/api/v2/${session?.user?.email}`)
-    );
+    }).then((res) => mutate(`/api/v2/${session?.user?.email}`));
   };
   return (
     <>
