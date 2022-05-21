@@ -31,7 +31,7 @@ const CategoryDisplayPage = ({ pid }: AppProps) => {
     fetch(`https://fakestoreapi.com/products/category/${categoryId}`)
       .then((res) => res.json())
       .then((json) => setData(json));
-  }, [categoryId]);
+  }, [categoryId, pid]);
 
   /*const { data, error } = useSWR<Product[]>(
       `https://fakestoreapi.com/products?limit=18`,
