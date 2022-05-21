@@ -22,7 +22,7 @@ import LoadingState from "../components/LoadingState";
 const CartPage = () => {
   const [session, loading] = useSession();
   const cartId = store((state) => state.id);
-  const { data, error } = useSWR(`api/v2/${session?.user?.email}`, fetcher);
+  const { data, error } = useSWR(`/api/v2/${session?.user?.email}`, fetcher);
 
   const cartItems = data?.cart.products as Prisma.JsonArray;
   React.useEffect(() => {
