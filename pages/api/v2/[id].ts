@@ -8,7 +8,8 @@ import prisma from '../../../src/prisma';
 // type cartItemsType = Prisma.PromiseReturnType<typeof cartItems>
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
       const { method } = req;
-  const { id } = req.query
+    const { id } = req.query
+    
    switch (method) {
        case 'GET':
            //get items in usercart
