@@ -82,6 +82,7 @@ const Item = () => {
       const uniqueItemId = { id: new Date().getTime() };
       const itemWithUniqueId = Object.assign(item, uniqueItemId);
       const updatedItem = { ...itemWithUniqueId, quantity: quantity };
+      //update ui first ..... then
 
       // update db
       const data = { email: session.user?.email, products: updatedItem };
