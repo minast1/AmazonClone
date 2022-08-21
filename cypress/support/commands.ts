@@ -55,3 +55,4 @@ Cypress.Commands.add("login", (id: string, password: string) => {
 //     }
 //   }
 // }
+export {}
