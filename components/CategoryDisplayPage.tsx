@@ -62,15 +62,19 @@ const CategoryDisplayPage = ({ pid }: AppProps) => {
         >
           {data &&
             data.map(
-              ({
-                id,
-                title,
-                price,
-                image,
-                description,
-                rating = Math.floor(Math.random() * 6),
-              }) => (
+              (
+                {
+                  id,
+                  title,
+                  price,
+                  image,
+                  description,
+                  rating = Math.floor(Math.random() * 6),
+                },
+                index
+              ) => (
                 <Box
+                  data-test={index}
                   onClick={() =>
                     router.push({
                       pathname: "/items/[pid]",
@@ -82,11 +86,14 @@ const CategoryDisplayPage = ({ pid }: AppProps) => {
                   }
                   p={2}
                   width={355}
+                  //data-test={`product-${id}`}
                   key={id}
                 >
                   <ItemCard
+                    // data-test={`product-${id}`}
                     image={image}
                     price={price}
+                    id={index}
                     title={title}
                     description={description}
                   />

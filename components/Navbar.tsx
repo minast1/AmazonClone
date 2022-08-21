@@ -160,8 +160,13 @@ const Navbar = ({ session }: AppProps) => {
             </ButtonBase>
 
             <Box display="flex" alignItems="center" ml="auto">
-              <ButtonBase disableRipple href="/cart">
+              <ButtonBase
+                disableRipple
+                href={session ? "/cart" : "/login"}
+                data-test="to-cart"
+              >
                 <Badge
+                  data-test="cart-total"
                   badgeContent={(itemsInCart && itemsInCart.length) || 0}
                   color="primary"
                 >

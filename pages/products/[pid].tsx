@@ -63,6 +63,7 @@ const Products = () => {
               {categories.map((category, index) => (
                 <ButtonBase
                   disableRipple
+                  data-test={`{product-${index}`}
                   key={index}
                   onClick={() => store.setState({ categoryId: category })}
                 >

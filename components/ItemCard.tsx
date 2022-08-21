@@ -19,6 +19,7 @@ const useStyles = makeStyles({
 });
 
 type AppProps = {
+  id: number;
   title: string;
   price: number;
   image: string;
@@ -28,6 +29,7 @@ type AppProps = {
 
 export default function ItemCard({
   title,
+  id,
   price,
   image,
   description,
@@ -35,11 +37,12 @@ export default function ItemCard({
   const classes = useStyles();
 
   return (
-    <Card className={classes.root} elevation={0}>
+    <Card className={classes.root} elevation={0} data-test={`products-canvas`}>
       <CardActionArea disableRipple>
         <Image
           height={300}
           width={315}
+          data-test={`products-image-canvas`}
           className={classes.media}
           alt={title}
           src={image}
