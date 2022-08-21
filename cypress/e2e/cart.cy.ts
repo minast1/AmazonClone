@@ -25,7 +25,7 @@ context('authenticated user interactions with cart', () => {
   beforeEach(() => {
     cy.login('edmarfo2@gmail.com', 'minast1rith')
     cy.visit('/')
-    cy.wait(3000) //mimics the loading state
+     cy.wait(3000)
     cy.getBySel('cart-total').find('span').invoke('text').as('initialCartValue')
     
   })
@@ -38,22 +38,22 @@ context('authenticated user interactions with cart', () => {
   })
   
   it('displays total cart items', () => {
-    const session = 'edmarfo2@gmail.com'
-    cy.intercept({ method: 'GET', url: `/api/v2/${session}` }).as('cartData')
-    cy.visit('/')
-      
-    cy.wait('@cartData', { timeout: 4000 }).then(({ response }) => {
-      const { products } = response.body.cart;
-      //cy.log('res', products.length)
-      cy.getBySel('cart-total').find('span').then(($span) => {
-        //cy.log($span.text())
-        
-        expect(Number($span.text())).to.equal(products.length)
+      const session = 'edmarfo2@gmail.com'
+    cy.intercept('GET',`/api/v2/${session}`).as('cartData')
+   cy.visit('/')
+    cy.wait(3000) //mimics the loading state
+    
+    cy.wait('@cartData').then(({ response }) => {
+     const { products } = response.body.cart;
+  
+      cy.getBySel('cart-total').find('span').then(($span) => { 
+        let value = Number($span.text())
+        expect(value).to.eq(products.length)
       })
     })
   })
 
-  it('can add item to cart', function () {
+  it('can add item to cart',  () =>  {
     cy.getBySel("grid-child-0").click()
     //get one element at any index and click on it
     cy.getBySel('products-canvas').eq(2).click()
@@ -69,7 +69,18 @@ context('authenticated user interactions with cart', () => {
   
   })
 
-  //it.only('can ')
+  it.only('can delete an item from cart', function () {
+    cy.visit('/cart')
+    cy.getBySel('delete').eq(1).click()
+    cy.wait(3000) //loading state
+    let val = Number(this.initialCartValue)
+
+     cy.getBySel('cart-total').find('span').then(($span) => { 
+        let value = Number($span.text())
+       expect(value).to.eq(val-1)
+      })
+    
+  })
 
 })
  
