@@ -70,6 +70,7 @@ function DefaultStep() {
                 required: "Please enter a valid email or phone number",
               })}
               value={value}
+              id="Id"
               fullWidth
               error={!!errors.id}
               onChange={onChange}
@@ -77,16 +78,20 @@ function DefaultStep() {
           )}
         />
         <ErrorMessage
+          data-test="password-error"
           errors={errors}
           name="id"
           render={({ message }: MessageType) => (
-            <span className={classes.error}>{message}</span>
+            <span data-test="password-error" className={classes.error}>
+              {message}
+            </span>
           )}
         />
       </FormControl>
       <Button
         fullWidth
         variant="contained"
+        data-test="continue-button"
         size="small"
         onClick={async () => {
           const isValidated = await trigger("id");

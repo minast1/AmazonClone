@@ -80,7 +80,7 @@ const Item = () => {
   const addToCart = (item: Product) => {
     if (session) {
       const uniqueItemId = { id: new Date().getTime() };
-      const itemWithUniqueId = Object.assign(item, uniqueItemId);
+      const itemWithUniqueId = item && Object.assign(item, uniqueItemId);
       const updatedItem = { ...itemWithUniqueId, quantity: quantity };
       //update ui first ..... then
 
@@ -94,7 +94,7 @@ const Item = () => {
         body: JSON.stringify(data),
       });
     } else {
-      router.push("/auth/credentials-signin");
+      router.push("/login");
     }
   };
   const classes = useStyles();
@@ -233,6 +233,7 @@ const Item = () => {
                 >
                   <Button
                     fullWidth
+                    data-test="add-to-cart-button"
                     color="secondary"
                     onClick={() => {
                       addToCart(data as Product);
@@ -250,6 +251,7 @@ const Item = () => {
 
                   <Button
                     fullWidth
+                    data-test="buy-now-button"
                     color="primary"
                     href="#"
                     variant="contained"

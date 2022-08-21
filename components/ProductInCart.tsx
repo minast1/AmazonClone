@@ -119,6 +119,7 @@ export default function ProductInCart({
             }}
           />
           <ButtonBase
+            data-test="delete"
             disableRipple
             onClick={() => onDelete(id)}
             style={{

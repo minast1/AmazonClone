@@ -51,7 +51,7 @@ export default function SimplePopover({ session }: AppProps) {
         disableRipple
       >
         <Box display="flex" flexDirection="column">
-          <span style={{ fontSize: "12px" }}>
+          <span style={{ fontSize: "12px" }} data-test="login-user">
             Hello , {session ? session.user?.name : "Sign in"}
           </span>
           <Box
@@ -60,7 +60,7 @@ export default function SimplePopover({ session }: AppProps) {
             alignItems="center"
           >
             Account & Lists
-            <ArrowDropDownIcon fontSize="small" />
+            <ArrowDropDownIcon fontSize="small" data-test="dropdown" />
           </Box>
         </Box>
       </ButtonBase>
@@ -83,6 +83,7 @@ export default function SimplePopover({ session }: AppProps) {
           {session ? (
             <Button
               variant="contained"
+              data-test="signout"
               color="primary"
               style={{ width: "100%" }}
               onClick={(event) => {
@@ -96,9 +97,10 @@ export default function SimplePopover({ session }: AppProps) {
             <React.Fragment>
               <Button
                 variant="contained"
+                data-test="to-login-button"
                 color="primary"
                 style={{ width: "100%" }}
-                href="/auth/credentials-signin"
+                href="/login"
               >
                 Sign in
               </Button>
@@ -109,7 +111,11 @@ export default function SimplePopover({ session }: AppProps) {
                 fontSize="11.5px"
               >
                 New customer?{" "}
-                <Link className={classes.link} href="/auth/credentials-signin">
+                <Link
+                  className={classes.link}
+                  href="/login"
+                  data-test="loggin-link"
+                >
                   start here
                 </Link>
               </Box>
