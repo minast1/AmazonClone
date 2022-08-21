@@ -44,7 +44,7 @@ context('authenticated user interactions with cart', () => {
     cy.wait(3000) //mimics the loading state
     
     cy.wait('@cartData').then(({ response }) => {
-     const { products } = response.body.cart;
+     const { products } = response?.body.cart;
   
       cy.getBySel('cart-total').find('span').then(($span) => { 
         let value = Number($span.text())
@@ -64,7 +64,7 @@ context('authenticated user interactions with cart', () => {
     //expect(Number(this.initialCartValue)).to.equal(9)
     cy.getBySel('add-to-cart-button').click() // click add to cart button 
     cy.wait('@addToCart').then(({ response }) => {
-      expect(response.statusCode).to.eq(200)
+      expect(response?.statusCode).to.eq(200)
     })
   
   })
