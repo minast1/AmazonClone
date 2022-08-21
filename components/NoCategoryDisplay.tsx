@@ -79,6 +79,7 @@ const NoCategoryDisplay = ({ pid }: AppProps) => {
                   key={id}
                 >
                   <ItemCard
+                    id={id}
                     image={image}
                     price={price}
                     title={title}
