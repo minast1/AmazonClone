@@ -78,7 +78,7 @@ describe('Authentication Tests', () => {
 
     cy.wait('@register').then((interception) => {
      //do something with interception response 
-      expect(interception.response.body).property('email').to.be.equal('cypress@gmail.com')
+      expect(interception.response?.body).property('email').to.be.equal('cypress@gmail.com')
      
 
     })

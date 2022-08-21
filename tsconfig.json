@@ -17,7 +17,7 @@
     "sourceMap": true,
     "outDir": "dist",
     "resolveJsonModule": true,
-    "isolatedModules": true,
+    "isolatedModules": false,
     "jsx": "preserve",
     "incremental": true
   },
