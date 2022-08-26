@@ -63,27 +63,28 @@ describe('Authentication Tests', () => {
     cy.getBySel('signup-error').should('exist').should('contain.text', 'Phone Number exists alrready')
   })
 
-  it('registers a new user', () => {
+  it.only('registers a new user', () => {
          cy.visit('/login')
-         cy.getBySel('to-register').click()
-    cy.intercept('/api/auth/signUp').as('register')
+    cy.getBySel('to-register').click()
+    const body = {email : 'edmarfo2@gmail.com', name: 'Edmond Marfo', password: 'minast1rith'}
+    cy.intercept('/api/auth/signUp', {
+      body : body 
+    } ).as('register')
 
 
     cy.getBySel('name').type('cypress user')
-        cy.getBySel('email').type('cypress@gmail.com')
+        cy.getBySel('email').type('edmarfo2@gmail.com')
     cy.getBySel('phone').type('0265845932')
-    cy.getBySel('password').type('cypress1')
-        cy.getBySel('passwordconfirm').type('cypress1')
+    cy.getBySel('password').type('minast1rith')
+        cy.getBySel('passwordconfirm').type('minast1rith')
         cy.get('.MuiButton-label').click()
 
     cy.wait('@register').then((interception) => {
      //do something with interception response 
-      expect(interception.response?.body).property('email').to.be.equal('cypress@gmail.com')
-     
-
-    })
+      expect(interception.response?.body).property('email').to.be.equal('edmarfo2@gmail.com')
+      })
     cy.location('pathname').should('eq', '/')
-    cy.getBySel("login-user").should('have.text', 'Hello , cypress user')
+    cy.getBySel("login-user").should('have.text', `Hello , ${body.name}`)
      cy.getCookie('next-auth.session-token').should('exist')
   })
 
